@@ -20,6 +20,7 @@ from datetime import datetime, timezone
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
+from .conflicts import check_conflicts
 from .llm import LLMError, process_intake
 from .schema import ApproveResponse, CRMRecord, ProcessRequest, ProcessResponse
 from .storage import StorageError, save_record
@@ -61,12 +62,17 @@ def process(req: ProcessRequest) -> ProcessResponse:
         # refused. Surface it rather than returning a half-baked record.
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 
+    # Screen against the firm's matter history. This is deterministic and local
+    # (no LLM, no network), so it runs on every intake rather than conditionally.
+    conflict = check_conflicts(extracted.client_name, extracted.opposing_party)
+
     record = CRMRecord(
         **extracted.model_dump(),
         intake_id=f"LF-{uuid.uuid4().hex[:8]}",
         received_at=datetime.now(timezone.utc).isoformat(),
         status="needs_review",  # approval gate: nothing is "approved" yet
         draft_reply=reply,
+        conflict=conflict,
     )
     return ProcessResponse(record=record)
 

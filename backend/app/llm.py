@@ -25,6 +25,7 @@ from openai import OpenAI
 # and optional LLM_MODEL are available whether launched via uvicorn or a script.
 load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
+from .conflicts import is_generic_party_reference
 from .prompts import (
     DRAFT_SYSTEM_PROMPT,
     EXTRACTION_RETRY_SUFFIX,
@@ -131,6 +132,13 @@ def _reconcile_missing_fields(record: ExtractedRecord) -> ExtractedRecord:
     field came back null, its name MUST appear in missing_fields so the human
     reviewer sees the gap. Additive only — we never drop what the model flagged.
     """
+    # "my employer" / "the other driver" identify nobody. The prompt asks for null
+    # in that case; when the model returns the phrase anyway, drop it here — a
+    # role-shaped string would otherwise pass as a screened party and suppress the
+    # conflict check's "only one side was checked" warning.
+    if is_generic_party_reference(record.opposing_party):
+        record.opposing_party = None
+
     missing = list(record.missing_fields)
     for field in NULLABLE_FIELDS:
         if getattr(record, field) is None and field not in missing:

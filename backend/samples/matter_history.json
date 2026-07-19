@@ -1,0 +1,902 @@
+[
+  {
+    "matter_id": "M-0001",
+    "client_name": "Omar Ferreira",
+    "opposing_party": "Anthony Silva",
+    "matter_type": "Real Estate",
+    "opened": "2023-04-18",
+    "closed": "2024-06-07",
+    "lawyer": "S. Thornberry"
+  },
+  {
+    "matter_id": "M-0002",
+    "client_name": "Sofia Nwosu",
+    "opposing_party": "Daniel Nwosu",
+    "matter_type": "Wills & Estates",
+    "opened": "2022-11-20",
+    "closed": "2023-07-29",
+    "lawyer": "M. Castellanos"
+  },
+  {
+    "matter_id": "M-0003",
+    "client_name": "Katherine Hall",
+    "opposing_party": "Elizabeth Stein",
+    "matter_type": "Real Estate",
+    "opened": "2024-05-13",
+    "closed": "2026-06-13",
+    "lawyer": "S. Thornberry"
+  },
+  {
+    "matter_id": "M-0004",
+    "client_name": "James Ivanov",
+    "opposing_party": "Katherine Vance",
+    "matter_type": "Employment",
+    "opened": "2019-02-20",
+    "closed": "2020-06-29",
+    "lawyer": "R. Adeyemi"
+  },
+  {
+    "matter_id": "M-0005",
+    "client_name": "William Kowalski",
+    "opposing_party": "Omar Nwosu",
+    "matter_type": "Employment",
+    "opened": "2024-10-12",
+    "closed": "2025-01-21",
+    "lawyer": "R. Adeyemi"
+  },
+  {
+    "matter_id": "M-0006",
+    "client_name": "Omar Kowalski",
+    "opposing_party": "Summit Construction Inc.",
+    "matter_type": "Other",
+    "opened": "2019-08-07",
+    "closed": "2020-12-29",
+    "lawyer": "R. Adeyemi"
+  },
+  {
+    "matter_id": "M-0007",
+    "client_name": "William Sokolova",
+    "opposing_party": "Wei Nwosu",
+    "matter_type": "Other",
+    "opened": "2021-08-30",
+    "closed": "2022-06-22",
+    "lawyer": "J. Lindqvist"
+  },
+  {
+    "matter_id": "M-0008",
+    "client_name": "Kestrel Properties Corp.",
+    "opposing_party": "Aaron Rossi",
+    "matter_type": "Real Estate",
+    "opened": "2021-10-11",
+    "closed": "2023-04-10",
+    "lawyer": "M. Castellanos"
+  },
+  {
+    "matter_id": "M-0009",
+    "client_name": "Brightwater Capital Ltd.",
+    "opposing_party": "Ironwood Logistics Corp.",
+    "matter_type": "Employment",
+    "opened": "2024-08-29",
+    "closed": "2025-04-20",
+    "lawyer": "J. Lindqvist"
+  },
+  {
+    "matter_id": "M-0010",
+    "client_name": "Linda Menon",
+    "opposing_party": "Wei Mwangi",
+    "matter_type": "Wills & Estates",
+    "opened": "2024-01-29",
+    "closed": "2024-11-02",
+    "lawyer": "J. Lindqvist"
+  },
+  {
+    "matter_id": "M-0011",
+    "client_name": "Susan Brennan",
+    "opposing_party": "Wei Meyers",
+    "matter_type": "Family",
+    "opened": "2022-01-29",
+    "closed": "2022-04-07",
+    "lawyer": "R. Adeyemi"
+  },
+  {
+    "matter_id": "M-0012",
+    "client_name": "Tomas Nakamura",
+    "opposing_party": "Crestwell Industries Inc.",
+    "matter_type": "Family",
+    "opened": "2020-09-25",
+    "closed": "2021-12-26",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0013",
+    "client_name": "Margaret Nakamura",
+    "opposing_party": "Margaret Reyes",
+    "matter_type": "Family",
+    "opened": "2020-09-11",
+    "closed": "2021-07-27",
+    "lawyer": "M. Castellanos"
+  },
+  {
+    "matter_id": "M-0014",
+    "client_name": "Thomas Delgado",
+    "opposing_party": "Blue Ridge Capital Ltd.",
+    "matter_type": "Employment",
+    "opened": "2022-11-15",
+    "closed": "2023-04-10",
+    "lawyer": "R. Adeyemi"
+  },
+  {
+    "matter_id": "M-0015",
+    "client_name": "Brightwater Industries LLC",
+    "opposing_party": "Anthony Dubois",
+    "matter_type": "Wills & Estates",
+    "opened": "2019-01-27",
+    "closed": "2020-07-02",
+    "lawyer": "M. Castellanos"
+  },
+  {
+    "matter_id": "M-0016",
+    "client_name": "Tomas Hall",
+    "opposing_party": "James Hall",
+    "matter_type": "Family",
+    "opened": "2020-09-28",
+    "closed": "2021-07-27",
+    "lawyer": "M. Castellanos"
+  },
+  {
+    "matter_id": "M-0017",
+    "client_name": "Pacific Construction Inc.",
+    "opposing_party": "Michael Ivanov",
+    "matter_type": "Real Estate",
+    "opened": "2021-10-20",
+    "closed": "2021-12-10",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0018",
+    "client_name": "Kestrel Partners Ltd.",
+    "opposing_party": "Sandra Meyers",
+    "matter_type": "Civil Litigation",
+    "opened": "2022-02-07",
+    "closed": "2023-11-08",
+    "lawyer": "M. Castellanos"
+  },
+  {
+    "matter_id": "M-0019",
+    "client_name": "Pacific Partners",
+    "opposing_party": "Copperfield Properties LLC",
+    "matter_type": "Real Estate",
+    "opened": "2023-02-07",
+    "closed": "2025-02-13",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0020",
+    "client_name": "Ironwood Freight",
+    "opposing_party": "Wei Chen",
+    "matter_type": "Real Estate",
+    "opened": "2023-12-03",
+    "closed": "2025-02-02",
+    "lawyer": "S. Thornberry"
+  },
+  {
+    "matter_id": "M-0021",
+    "client_name": "Grace Vance",
+    "opposing_party": "Sandra Alvarez",
+    "matter_type": "Family",
+    "opened": "2020-10-27",
+    "closed": "2022-07-01",
+    "lawyer": "J. Lindqvist"
+  },
+  {
+    "matter_id": "M-0022",
+    "client_name": "Alderman Freight",
+    "opposing_party": "Richard Delgado",
+    "matter_type": "Employment",
+    "opened": "2020-03-15",
+    "closed": "2021-12-24",
+    "lawyer": "J. Lindqvist"
+  },
+  {
+    "matter_id": "M-0023",
+    "client_name": "Pacific Industries Corp.",
+    "opposing_party": "Sandra Sokolova",
+    "matter_type": "Real Estate",
+    "opened": "2022-07-26",
+    "closed": "2023-01-21",
+    "lawyer": "J. Lindqvist"
+  },
+  {
+    "matter_id": "M-0024",
+    "client_name": "Copperfield Properties Inc.",
+    "opposing_party": "Nadia Ferreira",
+    "matter_type": "Real Estate",
+    "opened": "2021-05-13",
+    "closed": "2022-08-06",
+    "lawyer": "R. Adeyemi"
+  },
+  {
+    "matter_id": "M-0025",
+    "client_name": "Susan Lin",
+    "opposing_party": "Ironwood Systems",
+    "matter_type": "Civil Litigation",
+    "opened": "2019-02-10",
+    "closed": "2020-02-14",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0026",
+    "client_name": "Daniel Meyers",
+    "opposing_party": "David Feld",
+    "matter_type": "Other",
+    "opened": "2023-09-09",
+    "closed": "2024-07-20",
+    "lawyer": "J. Lindqvist"
+  },
+  {
+    "matter_id": "M-0027",
+    "client_name": "Priya Vance",
+    "opposing_party": "Katherine Chen",
+    "matter_type": "Wills & Estates",
+    "opened": "2024-01-27",
+    "closed": "2025-01-25",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0028",
+    "client_name": "Alderman Holdings",
+    "opposing_party": "Copperfield Industries LLP",
+    "matter_type": "Civil Litigation",
+    "opened": "2021-07-11",
+    "closed": "2022-08-31",
+    "lawyer": "S. Thornberry"
+  },
+  {
+    "matter_id": "M-0029",
+    "client_name": "Silverline Systems Inc.",
+    "opposing_party": "Daniel Brennan",
+    "matter_type": "Family",
+    "opened": "2023-03-20",
+    "closed": "2024-11-29",
+    "lawyer": "S. Thornberry"
+  },
+  {
+    "matter_id": "M-0030",
+    "client_name": "Barbara Nwosu",
+    "opposing_party": "Anthony Nwosu",
+    "matter_type": "Real Estate",
+    "opened": "2021-07-26",
+    "closed": "2022-08-07",
+    "lawyer": "S. Thornberry"
+  },
+  {
+    "matter_id": "M-0031",
+    "client_name": "Rachel Delgado",
+    "opposing_party": "Karen Hall",
+    "matter_type": "Real Estate",
+    "opened": "2019-11-29",
+    "closed": "2022-02-19",
+    "lawyer": "R. Adeyemi"
+  },
+  {
+    "matter_id": "M-0032",
+    "client_name": "Ingrid Osei",
+    "opposing_party": "Harborview Properties Corp.",
+    "matter_type": "Family",
+    "opened": "2020-12-28",
+    "closed": "2023-03-15",
+    "lawyer": "R. Adeyemi"
+  },
+  {
+    "matter_id": "M-0033",
+    "client_name": "Copperfield Capital Ltd.",
+    "opposing_party": "Stephen Haddad",
+    "matter_type": "Other",
+    "opened": "2019-08-18",
+    "closed": "2020-11-19",
+    "lawyer": "R. Adeyemi"
+  },
+  {
+    "matter_id": "M-0034",
+    "client_name": "Stephen Brennan",
+    "opposing_party": "Ironwood Foods",
+    "matter_type": "Other",
+    "opened": "2021-05-04",
+    "closed": "2022-01-23",
+    "lawyer": "J. Lindqvist"
+  },
+  {
+    "matter_id": "M-0035",
+    "client_name": "Lakeshore Freight Inc.",
+    "opposing_party": "William Dubois",
+    "matter_type": "Employment",
+    "opened": "2022-06-14",
+    "closed": "2023-07-26",
+    "lawyer": "S. Thornberry"
+  },
+  {
+    "matter_id": "M-0036",
+    "client_name": "Brightwater Developments Inc.",
+    "opposing_party": "Nadia Reyes",
+    "matter_type": "Real Estate",
+    "opened": "2021-03-30",
+    "closed": "2021-10-27",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0037",
+    "client_name": "Christopher Okonkwo",
+    "opposing_party": "Cedarpoint Systems Corp.",
+    "matter_type": "Employment",
+    "opened": "2022-07-14",
+    "closed": "2023-02-25",
+    "lawyer": "M. Castellanos"
+  },
+  {
+    "matter_id": "M-0038",
+    "client_name": "Tomas Dubois",
+    "opposing_party": "Harborview Capital LLC",
+    "matter_type": "Real Estate",
+    "opened": "2024-01-13",
+    "closed": "2025-02-23",
+    "lawyer": "M. Castellanos"
+  },
+  {
+    "matter_id": "M-0039",
+    "client_name": "Cedarpoint Industries",
+    "opposing_party": "Ironwood Developments Ltd.",
+    "matter_type": "Employment",
+    "opened": "2022-10-14",
+    "closed": "2024-12-07",
+    "lawyer": "M. Castellanos"
+  },
+  {
+    "matter_id": "M-0040",
+    "client_name": "James Dubois",
+    "opposing_party": "Ingrid Kowalski",
+    "matter_type": "Civil Litigation",
+    "opened": "2024-10-04",
+    "closed": "2025-06-10",
+    "lawyer": "J. Lindqvist"
+  },
+  {
+    "matter_id": "M-0041",
+    "client_name": "Robert Okonkwo",
+    "opposing_party": "Silverline Partners Inc.",
+    "matter_type": "Family",
+    "opened": "2019-02-01",
+    "closed": "2021-06-02",
+    "lawyer": "S. Thornberry"
+  },
+  {
+    "matter_id": "M-0042",
+    "client_name": "Alderman Industries Corp.",
+    "opposing_party": "Linda Haddad",
+    "matter_type": "Wills & Estates",
+    "opened": "2023-10-08",
+    "closed": "2024-11-26",
+    "lawyer": "J. Lindqvist"
+  },
+  {
+    "matter_id": "M-0043",
+    "client_name": "Ironwood Capital Corp.",
+    "opposing_party": "Linda Delgado",
+    "matter_type": "Family",
+    "opened": "2022-06-20",
+    "closed": "2024-09-09",
+    "lawyer": "R. Adeyemi"
+  },
+  {
+    "matter_id": "M-0044",
+    "client_name": "Blue Ridge Properties",
+    "opposing_party": "Brightwater Foods LLP",
+    "matter_type": "Other",
+    "opened": "2024-07-29",
+    "closed": "2025-03-22",
+    "lawyer": "J. Lindqvist"
+  },
+  {
+    "matter_id": "M-0045",
+    "client_name": "Grace Kowalski",
+    "opposing_party": "Foxglove Logistics",
+    "matter_type": "Wills & Estates",
+    "opened": "2024-09-08",
+    "closed": "2025-07-29",
+    "lawyer": "R. Adeyemi"
+  },
+  {
+    "matter_id": "M-0046",
+    "client_name": "Redstone Properties",
+    "opposing_party": "Redstone Freight Corp.",
+    "matter_type": "Employment",
+    "opened": "2023-02-28",
+    "closed": "2023-11-25",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0047",
+    "client_name": "Susan Petrov",
+    "opposing_party": "Harborview Capital Ltd.",
+    "matter_type": "Civil Litigation",
+    "opened": "2023-06-24",
+    "closed": "2023-09-14",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0048",
+    "client_name": "Anthony Cole",
+    "opposing_party": "Wei Blythe",
+    "matter_type": "Family",
+    "opened": "2023-07-19",
+    "closed": "2025-07-03",
+    "lawyer": "M. Castellanos"
+  },
+  {
+    "matter_id": "M-0049",
+    "client_name": "Yusuf Bergstrom",
+    "opposing_party": "Meridian Holdings LLC",
+    "matter_type": "Wills & Estates",
+    "opened": "2025-01-07",
+    "closed": "2025-09-14",
+    "lawyer": "S. Thornberry"
+  },
+  {
+    "matter_id": "M-0050",
+    "client_name": "Yusuf Reyes",
+    "opposing_party": "Christopher Menon",
+    "matter_type": "Family",
+    "opened": "2023-02-02",
+    "closed": "2025-03-16",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0051",
+    "client_name": "Nadia Meyers",
+    "opposing_party": "Wei Petrov",
+    "matter_type": "Family",
+    "opened": "2020-05-26",
+    "closed": "2022-03-19",
+    "lawyer": "M. Castellanos"
+  },
+  {
+    "matter_id": "M-0052",
+    "client_name": "Summit Systems",
+    "opposing_party": "Sofia Stein",
+    "matter_type": "Family",
+    "opened": "2023-07-15",
+    "closed": "2024-02-08",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0053",
+    "client_name": "Blue Ridge Media Ltd.",
+    "opposing_party": "Sofia Pruitt",
+    "matter_type": "Family",
+    "opened": "2023-06-21",
+    "closed": "2025-11-18",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0054",
+    "client_name": "Thomas Lin",
+    "opposing_party": "James Cole",
+    "matter_type": "Employment",
+    "opened": "2020-09-01",
+    "closed": "2023-01-13",
+    "lawyer": "J. Lindqvist"
+  },
+  {
+    "matter_id": "M-0055",
+    "client_name": "Stonebridge Properties Inc.",
+    "opposing_party": "Meridian Properties LLC",
+    "matter_type": "Family",
+    "opened": "2020-08-28",
+    "closed": "2021-05-24",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0056",
+    "client_name": "Ellen Vance",
+    "opposing_party": "Robert Feld",
+    "matter_type": "Employment",
+    "opened": "2024-10-21",
+    "closed": "2025-07-06",
+    "lawyer": "M. Castellanos"
+  },
+  {
+    "matter_id": "M-0057",
+    "client_name": "Pacific Developments LLC",
+    "opposing_party": "Cedarpoint Capital Corp.",
+    "matter_type": "Civil Litigation",
+    "opened": "2023-03-07",
+    "closed": "2024-09-22",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0058",
+    "client_name": "Ingrid Meyers",
+    "opposing_party": "Marcus Sokolova",
+    "matter_type": "Family",
+    "opened": "2020-07-03",
+    "closed": "2021-09-13",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0059",
+    "client_name": "Meridian Foods Ltd.",
+    "opposing_party": "Brightwater Holdings Corp.",
+    "matter_type": "Real Estate",
+    "opened": "2020-08-22",
+    "closed": "2022-06-14",
+    "lawyer": "S. Thornberry"
+  },
+  {
+    "matter_id": "M-0060",
+    "client_name": "Karen Reyes",
+    "opposing_party": "Wei Okonkwo",
+    "matter_type": "Wills & Estates",
+    "opened": "2021-07-28",
+    "closed": "2023-03-07",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0061",
+    "client_name": "Ironwood Freight Inc.",
+    "opposing_party": "Tomas Reyes",
+    "matter_type": "Real Estate",
+    "opened": "2019-03-11",
+    "closed": "2019-04-27",
+    "lawyer": "R. Adeyemi"
+  },
+  {
+    "matter_id": "M-0062",
+    "client_name": "Margaret Reyes",
+    "opposing_party": "Sandra Alvarez",
+    "matter_type": "Wills & Estates",
+    "opened": "2020-10-25",
+    "closed": "2022-03-30",
+    "lawyer": "R. Adeyemi"
+  },
+  {
+    "matter_id": "M-0063",
+    "client_name": "Stephen Silva",
+    "opposing_party": "Northgate Partners Corp.",
+    "matter_type": "Family",
+    "opened": "2019-01-20",
+    "closed": "2020-09-10",
+    "lawyer": "J. Lindqvist"
+  },
+  {
+    "matter_id": "M-0064",
+    "client_name": "Ana Rossi",
+    "opposing_party": "Cedarpoint Partners Inc.",
+    "matter_type": "Wills & Estates",
+    "opened": "2019-12-31",
+    "closed": "2021-09-14",
+    "lawyer": "R. Adeyemi"
+  },
+  {
+    "matter_id": "M-0065",
+    "client_name": "David Okonkwo",
+    "opposing_party": "Jonathan Ferreira",
+    "matter_type": "Employment",
+    "opened": "2024-02-14",
+    "closed": "2025-02-17",
+    "lawyer": "S. Thornberry"
+  },
+  {
+    "matter_id": "M-0066",
+    "client_name": "Yusuf Stein",
+    "opposing_party": "Beatrice Delgado",
+    "matter_type": "Family",
+    "opened": "2019-11-03",
+    "closed": "2022-01-13",
+    "lawyer": "M. Castellanos"
+  },
+  {
+    "matter_id": "M-0067",
+    "client_name": "Michael Ivanov",
+    "opposing_party": "Margaret Brennan",
+    "matter_type": "Other",
+    "opened": "2020-03-18",
+    "closed": "2020-12-12",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0068",
+    "client_name": "Elizabeth Kowalski",
+    "opposing_party": "Stonebridge Developments",
+    "matter_type": "Family",
+    "opened": "2023-04-11",
+    "closed": "2025-07-28",
+    "lawyer": "R. Adeyemi"
+  },
+  {
+    "matter_id": "M-0069",
+    "client_name": "Mateo Bergstrom",
+    "opposing_party": "Foxglove Media Ltd.",
+    "matter_type": "Employment",
+    "opened": "2023-04-28",
+    "closed": "2024-10-23",
+    "lawyer": "J. Lindqvist"
+  },
+  {
+    "matter_id": "M-0070",
+    "client_name": "Foxglove Media Ltd.",
+    "opposing_party": "Brandon Nwosu",
+    "matter_type": "Civil Litigation",
+    "opened": "2021-11-11",
+    "closed": "2022-03-19",
+    "lawyer": "J. Lindqvist"
+  },
+  {
+    "matter_id": "M-0071",
+    "client_name": "Susan Reyes",
+    "opposing_party": "Linda Reyes",
+    "matter_type": "Real Estate",
+    "opened": "2021-09-20",
+    "closed": "2021-12-21",
+    "lawyer": "M. Castellanos"
+  },
+  {
+    "matter_id": "M-0072",
+    "client_name": "Jonathan Alvarez",
+    "opposing_party": "Brightwater Capital Ltd.",
+    "matter_type": "Real Estate",
+    "opened": "2024-07-02",
+    "closed": "2024-09-25",
+    "lawyer": "S. Thornberry"
+  },
+  {
+    "matter_id": "M-0073",
+    "client_name": "Grace Mwangi",
+    "opposing_party": "Foxglove Partners",
+    "matter_type": "Employment",
+    "opened": "2024-07-29",
+    "closed": "2026-03-10",
+    "lawyer": "R. Adeyemi"
+  },
+  {
+    "matter_id": "M-0074",
+    "client_name": "Silverline Holdings Corp.",
+    "opposing_party": "Northgate Partners LLP",
+    "matter_type": "Civil Litigation",
+    "opened": "2022-05-15",
+    "closed": "2024-08-11",
+    "lawyer": "S. Thornberry"
+  },
+  {
+    "matter_id": "M-0075",
+    "client_name": "Thomas Silva",
+    "opposing_party": "Lakeshore Media",
+    "matter_type": "Employment",
+    "opened": "2023-11-14",
+    "closed": "2024-04-30",
+    "lawyer": "J. Lindqvist"
+  },
+  {
+    "matter_id": "M-0076",
+    "client_name": "Copperfield Properties Inc.",
+    "opposing_party": "Lakeshore Industries Ltd.",
+    "matter_type": "Other",
+    "opened": "2019-07-01",
+    "closed": "2019-08-19",
+    "lawyer": "R. Adeyemi"
+  },
+  {
+    "matter_id": "M-0077",
+    "client_name": "Margaret Mwangi",
+    "opposing_party": "Ellen Sokolova",
+    "matter_type": "Civil Litigation",
+    "opened": "2022-10-28",
+    "closed": "2024-07-02",
+    "lawyer": "S. Thornberry"
+  },
+  {
+    "matter_id": "M-0078",
+    "client_name": "Barbara Petrov",
+    "opposing_party": "Christopher Rossi",
+    "matter_type": "Civil Litigation",
+    "opened": "2020-07-17",
+    "closed": "2022-06-25",
+    "lawyer": "M. Castellanos"
+  },
+  {
+    "matter_id": "M-0079",
+    "client_name": "Christopher Bergstrom",
+    "opposing_party": "Katherine Sokolova",
+    "matter_type": "Civil Litigation",
+    "opened": "2021-08-28",
+    "closed": "2022-10-05",
+    "lawyer": "J. Lindqvist"
+  },
+  {
+    "matter_id": "M-0080",
+    "client_name": "Henry Nakamura",
+    "opposing_party": "Ironwood Logistics",
+    "matter_type": "Real Estate",
+    "opened": "2020-10-18",
+    "closed": "2022-09-10",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0081",
+    "client_name": "Nadia Sokolova",
+    "opposing_party": "Copperfield Holdings LLC",
+    "matter_type": "Civil Litigation",
+    "opened": "2019-05-11",
+    "closed": "2021-01-15",
+    "lawyer": "M. Castellanos"
+  },
+  {
+    "matter_id": "M-0082",
+    "client_name": "Richard Nwosu",
+    "opposing_party": "Northgate Construction Corp.",
+    "matter_type": "Real Estate",
+    "opened": "2021-10-06",
+    "closed": "2023-06-05",
+    "lawyer": "J. Lindqvist"
+  },
+  {
+    "matter_id": "M-0083",
+    "client_name": "Robert Feld",
+    "opposing_party": "Margaret Petrov",
+    "matter_type": "Civil Litigation",
+    "opened": "2022-09-14",
+    "closed": "2023-07-05",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0084",
+    "client_name": "Anthony Okonkwo",
+    "opposing_party": "Harborview Logistics",
+    "matter_type": "Wills & Estates",
+    "opened": "2022-05-09",
+    "closed": "2022-09-01",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0085",
+    "client_name": "William Dubois",
+    "opposing_party": "Tomas Reyes",
+    "matter_type": "Family",
+    "opened": "2022-07-16",
+    "closed": "2024-11-25",
+    "lawyer": "S. Thornberry"
+  },
+  {
+    "matter_id": "M-0086",
+    "client_name": "Sandra Dubois",
+    "opposing_party": "James Osei",
+    "matter_type": "Civil Litigation",
+    "opened": "2024-10-07",
+    "closed": null,
+    "lawyer": "M. Castellanos"
+  },
+  {
+    "matter_id": "M-0087",
+    "client_name": "Richard Reyes",
+    "opposing_party": "Meridian Holdings Ltd.",
+    "matter_type": "Civil Litigation",
+    "opened": "2022-01-26",
+    "closed": "2023-09-26",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0088",
+    "client_name": "Ingrid Kowalski",
+    "opposing_party": "Summit Construction Inc.",
+    "matter_type": "Real Estate",
+    "opened": "2021-06-20",
+    "closed": "2021-10-29",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0089",
+    "client_name": "Ana Vance",
+    "opposing_party": "Stonebridge Systems Inc.",
+    "matter_type": "Family",
+    "opened": "2022-09-23",
+    "closed": "2023-03-03",
+    "lawyer": "R. Adeyemi"
+  },
+  {
+    "matter_id": "M-0090",
+    "client_name": "Aaron Ferreira",
+    "opposing_party": "Blue Ridge Holdings LLP",
+    "matter_type": "Employment",
+    "opened": "2020-05-18",
+    "closed": "2021-01-09",
+    "lawyer": "J. Lindqvist"
+  },
+  {
+    "matter_id": "M-0091",
+    "client_name": "Aaron Nakamura",
+    "opposing_party": "Brightwater Capital Corp.",
+    "matter_type": "Civil Litigation",
+    "opened": "2023-09-02",
+    "closed": "2025-08-21",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0092",
+    "client_name": "Jonathan Pruitt",
+    "opposing_party": "Foxglove Partners Inc.",
+    "matter_type": "Employment",
+    "opened": "2023-04-26",
+    "closed": "2025-01-16",
+    "lawyer": "R. Adeyemi"
+  },
+  {
+    "matter_id": "M-0093",
+    "client_name": "Victor Chen",
+    "opposing_party": "Kestrel Foods Ltd.",
+    "matter_type": "Civil Litigation",
+    "opened": "2024-04-09",
+    "closed": null,
+    "lawyer": "S. Thornberry"
+  },
+  {
+    "matter_id": "M-0094",
+    "client_name": "Pacific Freight Corp.",
+    "opposing_party": "Ana Silva",
+    "matter_type": "Wills & Estates",
+    "opened": "2022-09-08",
+    "closed": "2024-01-25",
+    "lawyer": "S. Thornberry"
+  },
+  {
+    "matter_id": "M-0095",
+    "client_name": "Richard Vance",
+    "opposing_party": "Aaron Ivanov",
+    "matter_type": "Family",
+    "opened": "2021-06-12",
+    "closed": "2021-08-15",
+    "lawyer": "A. Whitfield"
+  },
+  {
+    "matter_id": "M-0096",
+    "client_name": "Jonathan Cole",
+    "opposing_party": "Marcus Silva",
+    "matter_type": "Real Estate",
+    "opened": "2023-10-30",
+    "closed": "2024-08-03",
+    "lawyer": "M. Castellanos"
+  },
+  {
+    "matter_id": "M-0097",
+    "client_name": "Foxglove Capital LLP",
+    "opposing_party": "Linda Delgado",
+    "matter_type": "Wills & Estates",
+    "opened": "2022-02-24",
+    "closed": "2023-02-23",
+    "lawyer": "J. Lindqvist"
+  },
+  {
+    "matter_id": "M-0098",
+    "client_name": "Stonebridge Industries LLP",
+    "opposing_party": "Linda Reyes",
+    "matter_type": "Wills & Estates",
+    "opened": "2021-05-14",
+    "closed": "2021-07-19",
+    "lawyer": "M. Castellanos"
+  },
+  {
+    "matter_id": "M-0099",
+    "client_name": "Brightwater Logistics LLP",
+    "opposing_party": "Meridian Capital Ltd.",
+    "matter_type": "Employment",
+    "opened": "2019-11-22",
+    "closed": "2021-05-09",
+    "lawyer": "S. Thornberry"
+  },
+  {
+    "matter_id": "M-0100",
+    "client_name": "Stonebridge Media LLP",
+    "opposing_party": "Silverline Logistics Inc.",
+    "matter_type": "Real Estate",
+    "opened": "2021-05-10",
+    "closed": "2022-06-20",
+    "lawyer": "R. Adeyemi"
+  }
+]

@@ -14,10 +14,33 @@ export type MatterType = (typeof MATTER_TYPES)[number];
 export type Confidence = "high" | "low";
 export type Status = "needs_review" | "approved";
 
+export type ConflictStatus = "CLEAR" | "POTENTIAL" | "CONFLICT";
+
+// Mirror of the backend's ConflictMatch / ConflictResult (backend/app/schema.py).
+export interface ConflictMatch {
+  matter_id: string;
+  score: number;
+  kind: "opposing_party_is_former_client" | "client_is_former_opposing_party";
+  reason: string;
+  past_client: string;
+  past_opposing: string;
+  matter_type: string;
+}
+
+export interface ConflictResult {
+  status: ConflictStatus;
+  matches: ConflictMatch[];
+  returning_client_matters: string[];
+  checked_against: number;
+  limitations: string[];
+}
+
 export interface CRMRecord {
   client_name: string | null;
   client_email: string | null;
   client_phone: string | null;
+  opposing_party: string | null;
+  conflict: ConflictResult | null;
   matter_type: MatterType;
   jurisdiction: string | null;
   key_dates: string[];

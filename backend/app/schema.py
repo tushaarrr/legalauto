@@ -35,7 +35,11 @@ MATTER_TYPES = [
 
 # Contact/identity fields that must never be guessed. If absent from the intake
 # they are null AND their name is reconciled into missing_fields server-side.
-NULLABLE_FIELDS = ["client_name", "client_email", "client_phone", "jurisdiction"]
+# opposing_party is here because a conflict check can only clear the side it was
+# actually given — a missing one must be visible to the reviewer, never assumed.
+NULLABLE_FIELDS = [
+    "client_name", "client_email", "client_phone", "jurisdiction", "opposing_party",
+]
 
 
 # --- Strict output contract handed to the LLM provider ------------------------
@@ -48,6 +52,9 @@ EXTRACTION_JSON_SCHEMA = {
         "client_name": {"type": ["string", "null"]},
         "client_email": {"type": ["string", "null"]},
         "client_phone": {"type": ["string", "null"]},
+        # The party on the other side, if the intake names one. Drives the
+        # conflict check, so it must be extracted verbatim and never guessed.
+        "opposing_party": {"type": ["string", "null"]},
         "matter_type": {"type": "string", "enum": MATTER_TYPES},
         "jurisdiction": {"type": ["string", "null"]},
         "key_dates": {"type": "array", "items": {"type": "string"}},
@@ -59,6 +66,7 @@ EXTRACTION_JSON_SCHEMA = {
         "client_name",
         "client_email",
         "client_phone",
+        "opposing_party",
         "matter_type",
         "jurisdiction",
         "key_dates",
@@ -76,6 +84,7 @@ class ExtractedRecord(BaseModel):
     client_name: Optional[str] = None
     client_email: Optional[str] = None
     client_phone: Optional[str] = None
+    opposing_party: Optional[str] = None
     matter_type: Literal[
         "Family",
         "Real Estate",
@@ -91,6 +100,37 @@ class ExtractedRecord(BaseModel):
     matter_type_confidence: Literal["high", "low"]
 
 
+class ConflictMatch(BaseModel):
+    """One past matter that triggered the conflict screen, with the reason.
+
+    The reviewing lawyer needs to see *why* a flag fired, not just a verdict —
+    a bare "CONFLICT" is not something anyone can act on or overrule.
+    """
+
+    matter_id: str
+    score: float  # 0.0-1.0 name-similarity confidence
+    kind: Literal["opposing_party_is_former_client", "client_is_former_opposing_party"]
+    reason: str
+    past_client: str
+    past_opposing: str
+    matter_type: str
+
+
+class ConflictResult(BaseModel):
+    """Outcome of screening an intake against the firm's matter history.
+
+    `limitations` is load-bearing: a CLEAR result on an intake that never named
+    an opposing party has only screened one side, and saying so is the difference
+    between an honest check and a false assurance.
+    """
+
+    status: Literal["CLEAR", "POTENTIAL", "CONFLICT"]
+    matches: List[ConflictMatch] = Field(default_factory=list)
+    returning_client_matters: List[str] = Field(default_factory=list)
+    checked_against: int = 0
+    limitations: List[str] = Field(default_factory=list)
+
+
 class CRMRecord(ExtractedRecord):
     """Full record as it will be reviewed and (later) written to the CRM.
 
@@ -103,6 +143,7 @@ class CRMRecord(ExtractedRecord):
     received_at: str
     status: Literal["needs_review", "approved"] = "needs_review"
     draft_reply: str
+    conflict: Optional[ConflictResult] = None
 
 
 class ProcessRequest(BaseModel):

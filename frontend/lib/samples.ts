@@ -25,6 +25,18 @@ export const SAMPLES: Sample[] = [
     label: "Real Estate — closing question",
     text: `Good afternoon — I'm Sofia Reyes (sofia.reyes@example.com, 305-555-0142). We're buying a condo in Miami, FL and our closing is scheduled for August 12, 2026. We'd like a lawyer to review the purchase contract before we sign.`,
   },
+  // The next two are seeded to collide with the synthetic matter history in
+  // backend/samples/matter_history.json, so the conflict screen actually fires
+  // in a demo. Neither name is spelled the way the firm's records spell it —
+  // that's the point.
+  {
+    label: "Real Estate — CONFLICT (landlord is a former client)",
+    text: `Hello, my name is Nadia Bergstrom. I rent a unit from Kestrel Properties LLC in Boise, Idaho and they are withholding my security deposit after I moved out on May 1, 2026. You can reach me at nadia.bergstrom@example.com or 208-555-0164.`,
+  },
+  {
+    label: "Wills & Estates — CONFLICT via nickname (Kate/Katherine)",
+    text: `Hi, I'm Mateo Delgado (mateo.delgado@example.com). My sister Kate Hall and I are in a dispute over our late mother's estate in Portland, Oregon. I would like to speak to someone about my options as a beneficiary.`,
+  },
   {
     label: "Wills & Estates — no jurisdiction given",
     text: `My father passed away recently and I need help settling his estate and figuring out probate. I'm the executor. You can email me at jordan.k@example.com. Please let me know what documents you need.`,

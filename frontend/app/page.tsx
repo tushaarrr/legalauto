@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { approveIntake, processIntake } from "@/lib/api";
 import { SAMPLES } from "@/lib/samples";
-import { CRMRecord, MATTER_TYPES, MatterType, SaveResult } from "@/lib/types";
+import {
+  ConflictResult,
+  CRMRecord,
+  MATTER_TYPES,
+  MatterType,
+  SaveResult,
+} from "@/lib/types";
 
 export default function ReviewPage() {
   const [intakeText, setIntakeText] = useState("");
@@ -159,6 +165,10 @@ export default function ReviewPage() {
               </p>
             ) : (
               <div className="space-y-4">
+                {/* Conflict screen result — first thing the reviewer sees,
+                    because it can make every other field moot. */}
+                <ConflictBanner conflict={record.conflict} />
+
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <TextField
                     label="Client name"
@@ -179,6 +189,11 @@ export default function ReviewPage() {
                     label="Jurisdiction"
                     value={record.jurisdiction}
                     onChange={(v) => update("jurisdiction", v)}
+                  />
+                  <TextField
+                    label="Opposing party"
+                    value={record.opposing_party}
+                    onChange={(v) => update("opposing_party", v)}
                   />
                 </div>
 
@@ -362,6 +377,77 @@ export default function ReviewPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+// The conflict screen result. Deliberately the loudest element on the page: a
+// CONFLICT means the firm may be barred from taking this client at all, so it
+// outranks every other field. Shows the matched matters and the reason, since a
+// verdict a lawyer can't inspect is a verdict they can't overrule.
+function ConflictBanner({ conflict }: { conflict: ConflictResult | null }) {
+  if (!conflict) return null;
+
+  const style = {
+    CONFLICT: {
+      box: "border-red-300 bg-red-50",
+      title: "text-red-900",
+      body: "text-red-800",
+      label: "⛔ Conflict of interest — do not accept without review",
+    },
+    POTENTIAL: {
+      box: "border-amber-300 bg-amber-50",
+      title: "text-amber-900",
+      body: "text-amber-800",
+      label: "⚠️ Potential conflict — needs a human decision",
+    },
+    CLEAR: {
+      box: "border-emerald-200 bg-emerald-50",
+      title: "text-emerald-900",
+      body: "text-emerald-800",
+      label: "✓ No conflict found",
+    },
+  }[conflict.status];
+
+  return (
+    <div className={`rounded-lg border p-4 ${style.box}`}>
+      <p className={`text-sm font-semibold ${style.title}`}>{style.label}</p>
+      <p className={`mt-1 text-xs ${style.body}`}>
+        Screened against {conflict.checked_against} past matters.
+      </p>
+
+      {conflict.matches.length > 0 && (
+        <ul className={`mt-2 space-y-1 text-sm ${style.body}`}>
+          {conflict.matches.map((m) => (
+            <li key={`${m.matter_id}-${m.kind}`} className="flex gap-2">
+              <span className="font-mono text-xs opacity-70">
+                {m.score.toFixed(2)}
+              </span>
+              <span>{m.reason}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {conflict.returning_client_matters.length > 0 && (
+        <p className={`mt-2 text-sm ${style.body}`}>
+          Returning client — previously acted for them in{" "}
+          <span className="font-mono text-xs">
+            {conflict.returning_client_matters.join(", ")}
+          </span>
+          . Not a conflict.
+        </p>
+      )}
+
+      {/* A CLEAR result that could only screen one side is not really clear. */}
+      {conflict.limitations.map((l) => (
+        <p
+          key={l}
+          className="mt-2 rounded border border-slate-300 bg-white/60 px-2 py-1 text-xs text-slate-700"
+        >
+          Limitation: {l}
+        </p>
+      ))}
+    </div>
   );
 }
 

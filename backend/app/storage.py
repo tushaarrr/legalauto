@@ -36,15 +36,19 @@ _CSV_COLUMNS = [
     "received_at",
     "approved_at",
     "status",
+    "conflict_status",
     "client_name",
     "client_email",
     "client_phone",
+    "opposing_party",
     "matter_type",
     "matter_type_confidence",
     "jurisdiction",
     "key_dates",
     "summary",
     "missing_fields",
+    "conflict_matched_matters",
+    "conflict_limitations",
     "draft_reply",
 ]
 
@@ -82,11 +86,35 @@ def _csv_path() -> Path:
     return path
 
 
+def _conflict_columns(record: CRMRecord) -> dict:
+    """Flatten the conflict screen into audit-friendly columns.
+
+    The status alone is not enough for a file that has to answer "who decided
+    what, on what basis" later — the matched matter ids and any limitation on the
+    check are recorded alongside it.
+    """
+    c = record.conflict
+    if c is None:
+        return {
+            "conflict_status": "NOT_CHECKED",
+            "conflict_matched_matters": "",
+            "conflict_limitations": "",
+        }
+    return {
+        "conflict_status": c.status,
+        "conflict_matched_matters": _LIST_SEP.join(
+            f"{m.matter_id}({m.score})" for m in c.matches
+        ),
+        "conflict_limitations": _LIST_SEP.join(c.limitations),
+    }
+
+
 def _csv_row(record: CRMRecord, approved_at: str) -> dict:
     data = record.model_dump()
     data["approved_at"] = approved_at
     data["key_dates"] = _LIST_SEP.join(record.key_dates)
     data["missing_fields"] = _LIST_SEP.join(record.missing_fields)
+    data.update(_conflict_columns(record))
     return {col: data.get(col, "") for col in _CSV_COLUMNS}
 
 
@@ -110,6 +138,18 @@ def _save_csv(record: CRMRecord, approved_at: str) -> SaveResult:
                 approved_at=approved_at,
                 already_saved=True,
             )
+        # A file written by an older column set would silently misalign if we
+        # appended to it — every later row shifted by a column. Refuse instead.
+        if path.exists() and path.stat().st_size > 0:
+            with path.open(newline="", encoding="utf-8") as fh:
+                header = next(csv.reader(fh), [])
+            if header != _CSV_COLUMNS:
+                missing = [c for c in _CSV_COLUMNS if c not in header]
+                raise StorageError(
+                    f"{path} was written with a different column set and cannot be "
+                    f"appended to safely (missing: {', '.join(missing) or 'n/a'}). "
+                    f"Move or delete the file and it will be recreated."
+                )
         write_header = not path.exists() or path.stat().st_size == 0
         with path.open("a", newline="", encoding="utf-8") as fh:
             writer = csv.DictWriter(fh, fieldnames=_CSV_COLUMNS)
@@ -158,6 +198,7 @@ def _save_airtable(record: CRMRecord, approved_at: str) -> SaveResult:
         "client_name": record.client_name,
         "client_email": record.client_email,
         "client_phone": record.client_phone,
+        "opposing_party": record.opposing_party,
         "matter_type": record.matter_type,
         "matter_type_confidence": record.matter_type_confidence,
         "jurisdiction": record.jurisdiction,
@@ -165,6 +206,7 @@ def _save_airtable(record: CRMRecord, approved_at: str) -> SaveResult:
         "summary": record.summary,
         "missing_fields": _LIST_SEP.join(record.missing_fields),
         "draft_reply": record.draft_reply,
+        **_conflict_columns(record),
     }
     try:
         resp = httpx.post(

@@ -1,9 +1,9 @@
 # LegalFlow — Client Intake → CRM Automation
 
 An **approval-first** automation that turns a raw client intake (a pasted email or
-form message) into a structured CRM record and a ready-to-send confirmation
-reply — with a human reviewing and approving everything before it is saved or
-sent.
+form message) into a structured CRM record, screens it for conflicts of interest
+against the firm's matter history, and drafts a confirmation reply — with a human
+reviewing and approving everything before it is saved or sent.
 
 > ### Please read first
 > - **Synthetic data only.** Every sample intake here is fictional. No real
@@ -43,9 +43,13 @@ Save → Copy reply, and save it to docs/demo.gif. -->
        ▼
   POST /process ──►  LLM extract (strict JSON, 1 retry)  ─►  reconcile missing fields
        │                                                          │
+       │            CONFLICT SCREEN vs the firm's matter history ◄─┤
+       │            (deterministic, local, no LLM)                 │
+       │                                                          │
        │            LLM draft reply (logistics only, no advice) ◄─┘
        ▼
-  Reviewable record  (status: needs_review)  — NOT persisted
+  Reviewable record  (status: needs_review, conflict: CLEAR/POTENTIAL/CONFLICT)
+       │                                              — NOT persisted
        │
        ▼
   Human reviews & edits in the UI  ── the approval gate ──►  clicks Approve
@@ -71,6 +75,27 @@ persists nothing; `/approve` is the *only* path that writes to storage.
    forbids any legal opinion or recommendation, and if the intake asks for
    advice, the draft says a lawyer will follow up rather than answering. See
    `DRAFT_SYSTEM_PROMPT` in [`backend/app/prompts.py`](backend/app/prompts.py).
+
+3. **The conflict screen.** Before a firm can take a client it must check whether
+   it has ever acted against them, or for the party they're now opposing —
+   missing one is an ethics violation that can get the firm disqualified. Every
+   intake is screened against the firm's matter history
+   ([`backend/app/conflicts.py`](backend/app/conflicts.py)). The rule it encodes
+   is that **a conflict is an adverse relationship, not a familiar name**:
+
+   - new opposing party ≈ a *former client* → conflict
+   - new client ≈ a *former opposing party* → conflict
+   - new client ≈ a former *client* → **not** a conflict, just a returning client
+
+   Matching is fuzzy because names arrive messy — "Kestrel Properties LLC" must
+   match the firm's record of "Kestrel Properties Corp.", and "Kate Hall" must
+   match "Katherine Hall". Two dropdown samples are seeded to trigger exactly
+   those cases. The check is deterministic and local: no LLM, no network, so it
+   runs on every intake and returns the same answer every time.
+
+   A `CLEAR` verdict also reports its own **limitations**. If the intake never
+   named an opposing party, only one side was screened, and the result says so
+   rather than implying a clean bill of health.
 
 Two more guarantees back these up:
 
@@ -192,6 +217,44 @@ judgment, and a couple of the misses are genuinely arguable (a prenup sits
 between Family and Contract). Field-extraction matching normalizes phone digits
 and is lenient on name/jurisdiction phrasing — see `field_match()` in the script.
 
+### Conflict-check results
+
+Recall is the number that matters here: a missed adverse match can disqualify the
+firm, while a false positive costs a lawyer ten seconds to dismiss. Test cases are
+generated deterministically *from* the seeded history, so ground truth is known
+exactly rather than hand-labeled.
+
+```bash
+python -m scripts.seed_matter_history   # 100 synthetic past matters (reproducible)
+python -m scripts.eval_conflicts        # no LLM calls, no API key needed, free
+```
+
+Measured over 159 cases against 100 past matters:
+
+| Metric | Result |
+|---|---|
+| **Recall on planted conflicts** | **100%** (104/104) |
+| — caught as `CONFLICT` rather than `POTENTIAL` | 62.5% (65/104) |
+| — by disguise: verbatim / suffix swap / nickname / typo | 100% each |
+| **False-positive rate on clear intakes** | **0%** (0/40) |
+| Returning clients correctly *not* called a conflict | 100% (15/15) |
+
+Planted conflicts are real past parties reused as the other side of a new intake
+in four disguises — verbatim, corporate-suffix swap ("Inc." → "LLC"), nickname
+("Robert" → "Bob"), and a single-character typo. All four are caught. The 62.5%
+figure is not a miss rate: typo'd names land in `POTENTIAL` rather than
+`CONFLICT`, which is the correct response to a genuinely uncertain match — they
+still surface to the reviewer.
+
+**Why the 0% false-positive rate is meaningful, and where it's thin.** The clear
+cases are built from the same name pools as the history, so surname and word
+collisions occur and are deliberately left in — every one of the 40 scores above
+0.60 similarity to some real party, and 12 come within 0.10 of the flag
+threshold. But the margin is narrow: the closest non-conflict scored 0.783
+against a 0.82 threshold. The separation holds on this data; a different name
+distribution could produce false positives, and the honest read is "well
+separated on 159 cases", not "solved".
+
 ## Data model
 
 | Field | Type | Source |
@@ -201,6 +264,8 @@ and is lenient on name/jurisdiction phrasing — see `field_match()` in the scri
 | client_name | string \| null | extracted |
 | client_email | string \| null | extracted |
 | client_phone | string \| null | extracted |
+| opposing_party | string \| null | extracted (drives the conflict screen) |
+| conflict | CLEAR \| POTENTIAL \| CONFLICT + matched matters + limitations | screened |
 | matter_type | enum (Family, Real Estate, Employment, Wills & Estates, Civil Litigation, Other) | classified |
 | matter_type_confidence | enum (high, low) | classified |
 | jurisdiction | string \| null | extracted |
@@ -215,20 +280,45 @@ and is lenient on name/jurisdiction phrasing — see `field_match()` in the scri
 ```
 backend/
   app/
-    main.py       FastAPI app: /process (read+draft) and /approve (persist)
+    main.py       FastAPI app: /process (read+draft+screen) and /approve (persist)
     llm.py        the only module that talks to the LLM provider
+    conflicts.py  the only module that screens against the matter history
     prompts.py    the extraction + no-advice draft system prompts
     schema.py     Pydantic models + the strict JSON output contract
     storage.py    the only module that writes to the CRM (CSV / Airtable)
   samples/
-    intakes.json  18 hand-labeled synthetic intakes
+    intakes.json         18 hand-labeled synthetic intakes
+    matter_history.json  100 synthetic past matters (generated, reproducible)
   scripts/
-    test_process.py   quick 3-intake smoke test
-    eval_samples.py   Phase 4 accuracy sweep
+    test_process.py         quick 3-intake smoke test
+    eval_samples.py         extraction + classification accuracy sweep
+    seed_matter_history.py  regenerates the synthetic matter history
+    eval_conflicts.py       conflict recall / false-positive sweep
 frontend/
   app/page.tsx    the single review page (input | record + draft | approve)
   lib/            api client, shared types, dropdown samples
 ```
+
+## What is not built yet
+
+The longer-term design is an event-triggered pipeline: an inbound email fires the
+run, external sources enrich it, and artifacts (calendar holds, a lawyer brief)
+are prepared before the same human gate. What exists today is the intake →
+extract → conflict screen → review → approve → CRM loop, driven from the UI.
+
+Not yet built, and honestly blocked on infrastructure rather than design:
+
+| Piece | Status |
+|---|---|
+| Email trigger (run on inbound mail, not a button) | needs a Gmail/webhook integration + OAuth |
+| External enrichment (company registry, court records) | needs n8n/Firecrawl and API credentials |
+| Calendar holds + Slack lawyer brief | needs Google Calendar / Slack OAuth |
+| Matter history in Postgres rather than a JSON file | `conflicts.py` isolates the loader, so this is a one-module change |
+| Run dashboard + full audit log table | the CSV already records conflict status and matched matters per approval |
+
+The conflict screen was built first deliberately: it is the most legally specific
+part, it needs no external service, and it is the piece whose failure is most
+expensive.
 
 ## Honesty checklist
 

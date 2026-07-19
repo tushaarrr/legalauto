@@ -18,6 +18,7 @@ EXTRACTION_SYSTEM_PROMPT = """You are an intake-processing assistant for a law f
 
 Given a raw client intake, extract the requested fields as strict JSON. Rules:
 - If a field is not clearly stated in the intake, set it to null and add its name to missing_fields. Never guess or invent values.
+- opposing_party is the person or organization on the other side of the client's matter: the employer, landlord, spouse, other driver, counterparty, or company being sued. Copy the name EXACTLY as written in the intake, with no added titles or corrected spelling. If the intake refers to them only generically ("my employer", "the landlord") without naming them, set it to null. This field feeds a conflict-of-interest check, so a guessed or normalized name is worse than no name at all.
 - Classify matter_type into the fixed list only. If unsure, use "Other" and set matter_type_confidence to "low".
 - summary is one neutral sentence describing what the client wants, with no legal characterization.
 - Output valid JSON only, no prose, no markdown fences."""
@@ -29,8 +30,8 @@ EXTRACTION_RETRY_SUFFIX = """
 
 STRICT REMINDER: Your previous output could not be parsed as the required JSON.
 Return ONLY a single JSON object with exactly these keys and nothing else:
-client_name, client_email, client_phone, matter_type, jurisdiction, key_dates,
-summary, missing_fields, matter_type_confidence.
+client_name, client_email, client_phone, opposing_party, matter_type,
+jurisdiction, key_dates, summary, missing_fields, matter_type_confidence.
 No markdown fences, no commentary, no leading or trailing text."""
 
 
@@ -58,6 +59,11 @@ def build_draft_user_prompt(record: dict) -> str:
     We hand the drafter the already-extracted structured fields (not the raw
     intake) so it works only from vetted data and cannot re-introduce anything
     the extractor deliberately left null.
+
+    Note what is NOT in `known` below: opposing_party. It exists to feed the
+    internal conflict screen, and there is no reason to name the other side back
+    to the client in a confirmation email. If it is missing it still shows up via
+    missing_fields, since asking who the other party is is a fair intake question.
     """
     known = {
         "Client name": record.get("client_name"),
