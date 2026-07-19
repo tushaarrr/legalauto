@@ -131,6 +131,30 @@ class ConflictResult(BaseModel):
     limitations: List[str] = Field(default_factory=list)
 
 
+class SourceResult(BaseModel):
+    """One external source's contribution to an enrichment run.
+
+    Every source returns one of these, including when it fails. `status` is the
+    source of truth for what actually happened:
+
+      ok          - the call succeeded and `data` holds the result
+      unavailable - the source was tried and failed, or has no credentials
+      skipped     - the source was deliberately not called (see `error` for why)
+
+    A source that failed still produces a row. Nothing about a run is inferred
+    from silence, and no claim is made about a source that did not return data.
+    """
+
+    source: str
+    status: Literal["ok", "unavailable", "skipped"]
+    data: Optional[dict] = None
+    error: Optional[str] = None
+    latency_ms: int = 0
+    attempts: int = 0
+    cached: bool = False
+    query: Optional[str] = None
+
+
 class CRMRecord(ExtractedRecord):
     """Full record as it will be reviewed and (later) written to the CRM.
 

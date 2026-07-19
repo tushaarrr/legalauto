@@ -6,3 +6,6 @@ __pycache__/
 # Local CSV "CRM" and Phase 4 eval outputs — generated, not source.
 data/
 eval_results/
+
+# Cached responses from the external enrichment APIs.
+.cache/
