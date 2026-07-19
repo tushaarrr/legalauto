@@ -1,0 +1,32 @@
+// Five synthetic sample intakes for the dropdown. All fictional — no real client
+// data (see the README's synthetic-data disclaimer). They deliberately vary in
+// matter type and completeness so the reviewer can see extraction, the
+// low-confidence path, and missing-field flagging.
+
+export interface Sample {
+  label: string;
+  text: string;
+}
+
+export const SAMPLES: Sample[] = [
+  {
+    label: "Family — divorce & custody (complete)",
+    text: `Hi, my name is Priya Menon, you can reach me at priya.menon@example.com or (415) 555-0198. My husband and I are separating and we need help with the divorce and custody of our two kids. We're in San Francisco, California. Our mediation date is set for March 3, 2026. What are the next steps?`,
+  },
+  {
+    label: "Employment — sparse, missing contact info",
+    text: `Hello, I got hurt at work last month and my employer is giving me a hard time. Can someone call me back?`,
+  },
+  {
+    label: "Landlord/tenant — asks for legal advice",
+    text: `This is David. My landlord in Austin, TX is trying to evict me and I signed the lease on 01/15/2024. Do I have a case? Should I stop paying rent until this is resolved? Please advise. My number is 512-555-7742.`,
+  },
+  {
+    label: "Real Estate — closing question",
+    text: `Good afternoon — I'm Sofia Reyes (sofia.reyes@example.com, 305-555-0142). We're buying a condo in Miami, FL and our closing is scheduled for August 12, 2026. We'd like a lawyer to review the purchase contract before we sign.`,
+  },
+  {
+    label: "Wills & Estates — no jurisdiction given",
+    text: `My father passed away recently and I need help settling his estate and figuring out probate. I'm the executor. You can email me at jordan.k@example.com. Please let me know what documents you need.`,
+  },
+];

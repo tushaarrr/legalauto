@@ -1,0 +1,218 @@
+[
+  {
+    "id": "family_divorce_complete",
+    "text": "Hi, my name is Priya Menon, you can reach me at priya.menon@example.com or (415) 555-0198. My husband and I are separating and we need help with the divorce and custody of our two kids. We're in San Francisco, California. Our mediation date is set for March 3, 2026. What are the next steps?",
+    "matter_type": "Family",
+    "expected": {
+      "client_name": "Priya Menon",
+      "client_email": "priya.menon@example.com",
+      "client_phone": "(415) 555-0198",
+      "jurisdiction": "San Francisco, California"
+    },
+    "notes": "Complete family matter; should be high confidence."
+  },
+  {
+    "id": "family_prenup_no_phone",
+    "text": "Good morning. I'm Daniel Okonkwo (daniel.okonkwo@example.com). My fiancee and I are getting married in Denver, Colorado this fall and would like to put a prenuptial agreement in place before the wedding. What does that process look like?",
+    "matter_type": "Family",
+    "expected": {
+      "client_name": "Daniel Okonkwo",
+      "client_email": "daniel.okonkwo@example.com",
+      "client_phone": null,
+      "jurisdiction": "Denver, Colorado"
+    },
+    "notes": "Phone missing; must be flagged, not invented."
+  },
+  {
+    "id": "family_adoption_no_contact",
+    "text": "Hello, this is Marcus. I want to legally adopt my stepdaughter here in Ohio now that her biological father has agreed to it. Can your firm help with a stepparent adoption?",
+    "matter_type": "Family",
+    "expected": {
+      "client_name": "Marcus",
+      "client_email": null,
+      "client_phone": null,
+      "jurisdiction": "Ohio"
+    },
+    "notes": "First name only; no email/phone provided."
+  },
+  {
+    "id": "realestate_condo_complete",
+    "text": "Good afternoon - I'm Sofia Reyes (sofia.reyes@example.com, 305-555-0142). We're buying a condo in Miami, FL and our closing is scheduled for August 12, 2026. We'd like a lawyer to review the purchase contract before we sign.",
+    "matter_type": "Real Estate",
+    "expected": {
+      "client_name": "Sofia Reyes",
+      "client_email": "sofia.reyes@example.com",
+      "client_phone": "305-555-0142",
+      "jurisdiction": "Miami, FL"
+    },
+    "notes": "Complete real estate closing matter."
+  },
+  {
+    "id": "realestate_boundary_no_email",
+    "text": "My name is Ellen Pruitt and my number is 208-555-0177. My neighbor built a fence that crosses onto my property line and I want to understand my options. The property is in Boise, Idaho. Please give me a call.",
+    "matter_type": "Real Estate",
+    "expected": {
+      "client_name": "Ellen Pruitt",
+      "client_email": null,
+      "client_phone": "208-555-0177",
+      "jurisdiction": "Boise, Idaho"
+    },
+    "notes": "Email missing; boundary dispute is still Real Estate."
+  },
+  {
+    "id": "realestate_commercial_lease_no_phone",
+    "text": "Hi there, I'm Aaron Feld, aaron.feld@example.com. I run a small cafe and I'm about to sign a five-year commercial lease for a storefront in Portland, Oregon. I'd like an attorney to look over the lease terms before I commit.",
+    "matter_type": "Real Estate",
+    "expected": {
+      "client_name": "Aaron Feld",
+      "client_email": "aaron.feld@example.com",
+      "client_phone": null,
+      "jurisdiction": "Portland, Oregon"
+    },
+    "notes": "Commercial lease review; phone missing."
+  },
+  {
+    "id": "employment_injury_sparse",
+    "text": "Hello, I got hurt at work last month and my employer is giving me a hard time. Can someone call me back?",
+    "matter_type": "Employment",
+    "expected": {
+      "client_name": null,
+      "client_email": null,
+      "client_phone": null,
+      "jurisdiction": null
+    },
+    "notes": "Sparse; all four identity fields missing."
+  },
+  {
+    "id": "employment_termination_complete",
+    "text": "My name is Grace Lin (grace.lin@example.com, 617-555-0163). I was fired from my job in Boston, Massachusetts on June 30, 2026 right after I reported a safety violation, and I believe it was retaliation. I'd like to talk to someone about my options.",
+    "matter_type": "Employment",
+    "expected": {
+      "client_name": "Grace Lin",
+      "client_email": "grace.lin@example.com",
+      "client_phone": "617-555-0163",
+      "jurisdiction": "Boston, Massachusetts"
+    },
+    "notes": "Complete employment matter with a key date."
+  },
+  {
+    "id": "employment_wages_no_jurisdiction",
+    "text": "Hi, this is Tomas Alvarez, tomas.alvarez@example.com. My employer hasn't paid me overtime for the last three months and stopped responding when I asked about it. What can I do?",
+    "matter_type": "Employment",
+    "expected": {
+      "client_name": "Tomas Alvarez",
+      "client_email": "tomas.alvarez@example.com",
+      "client_phone": null,
+      "jurisdiction": null
+    },
+    "notes": "No location or phone stated."
+  },
+  {
+    "id": "wills_probate_no_jurisdiction",
+    "text": "My father passed away recently and I need help settling his estate and figuring out probate. I'm the executor. You can email me at jordan.k@example.com. Please let me know what documents you need.",
+    "matter_type": "Wills & Estates",
+    "expected": {
+      "client_name": null,
+      "client_email": "jordan.k@example.com",
+      "client_phone": null,
+      "jurisdiction": null
+    },
+    "notes": "Name not clearly stated (only an email handle); no jurisdiction."
+  },
+  {
+    "id": "wills_draft_complete",
+    "text": "Hello, my name is Beatrice Hall and you can reach me at beatrice.hall@example.com or 512-555-0119. My husband and I want to draft our wills and set up a living trust for our children. We live in Austin, Texas.",
+    "matter_type": "Wills & Estates",
+    "expected": {
+      "client_name": "Beatrice Hall",
+      "client_email": "beatrice.hall@example.com",
+      "client_phone": "512-555-0119",
+      "jurisdiction": "Austin, Texas"
+    },
+    "notes": "Complete estate-planning matter."
+  },
+  {
+    "id": "wills_estate_no_email",
+    "text": "This is Henry Osei, phone 404-555-0188. My aunt left no will and I'm trying to figure out how her house and savings get distributed among the family. She lived in Atlanta, Georgia. Can you help?",
+    "matter_type": "Wills & Estates",
+    "expected": {
+      "client_name": "Henry Osei",
+      "client_email": null,
+      "client_phone": "404-555-0188",
+      "jurisdiction": "Atlanta, Georgia"
+    },
+    "notes": "Intestate estate; email missing."
+  },
+  {
+    "id": "litigation_car_accident_complete",
+    "text": "Hi, I'm Rachel Stein (rachel.stein@example.com, 206-555-0155). I was rear-ended by a delivery truck in Seattle, Washington on May 14, 2026 and I've had medical bills piling up since. The other driver's insurer is disputing everything. I want to pursue a claim.",
+    "matter_type": "Civil Litigation",
+    "expected": {
+      "client_name": "Rachel Stein",
+      "client_email": "rachel.stein@example.com",
+      "client_phone": "206-555-0155",
+      "jurisdiction": "Seattle, Washington"
+    },
+    "notes": "Personal-injury dispute; complete."
+  },
+  {
+    "id": "litigation_contract_dispute_no_phone",
+    "text": "Good day. My name is Victor Nwosu, victor.nwosu@example.com. My company hired a vendor who took a 50% deposit and never delivered the software they promised. We're based in Chicago, Illinois and want to take legal action to recover the money.",
+    "matter_type": "Civil Litigation",
+    "expected": {
+      "client_name": "Victor Nwosu",
+      "client_email": "victor.nwosu@example.com",
+      "client_phone": null,
+      "jurisdiction": "Chicago, Illinois"
+    },
+    "notes": "Breach-of-contract dispute; phone missing."
+  },
+  {
+    "id": "litigation_advice_request_no_email",
+    "text": "This is Karen Blythe, 702-555-0133. A contractor did a terrible job renovating my kitchen in Las Vegas, Nevada and now refuses to fix it or refund me. Do I have a case? Should I sue him? Please advise on what I should do.",
+    "matter_type": "Civil Litigation",
+    "expected": {
+      "client_name": "Karen Blythe",
+      "client_email": null,
+      "client_phone": "702-555-0133",
+      "jurisdiction": "Las Vegas, Nevada"
+    },
+    "notes": "Explicitly requests legal advice; the draft must defer to a lawyer, not answer."
+  },
+  {
+    "id": "other_immigration_low_conf",
+    "text": "Hello, my name is Ana Sokolova (ana.sokolova@example.com). I'm on a work visa in Houston, Texas and I want to apply for a green card through my employer. Can your firm help with the immigration paperwork?",
+    "matter_type": "Other",
+    "expected": {
+      "client_name": "Ana Sokolova",
+      "client_email": "ana.sokolova@example.com",
+      "client_phone": null,
+      "jurisdiction": "Houston, Texas"
+    },
+    "notes": "Immigration is outside the taxonomy -> Other; expect low confidence."
+  },
+  {
+    "id": "other_traffic_no_email",
+    "text": "Hey, it's Brandon Cole, 480-555-0120. I got charged with a DUI in Phoenix, Arizona last weekend and I don't know what happens next. Can a lawyer help me with this?",
+    "matter_type": "Other",
+    "expected": {
+      "client_name": "Brandon Cole",
+      "client_email": null,
+      "client_phone": "480-555-0120",
+      "jurisdiction": "Phoenix, Arizona"
+    },
+    "notes": "Criminal/traffic matter is outside the taxonomy -> Other."
+  },
+  {
+    "id": "other_vague_ambiguous",
+    "text": "Hi, I need some legal help with a situation I'm dealing with. It's kind of complicated. Can someone reach out to me? Thanks, Chris.",
+    "matter_type": "Other",
+    "expected": {
+      "client_name": "Chris",
+      "client_email": null,
+      "client_phone": null,
+      "jurisdiction": null
+    },
+    "notes": "Deliberately vague -> Other with low confidence; most fields missing."
+  }
+]
