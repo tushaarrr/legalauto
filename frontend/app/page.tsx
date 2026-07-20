@@ -10,18 +10,27 @@ import {
   MatterType,
   SaveResult,
 } from "@/lib/types";
+import { Card, EmptyState } from "@/components/charts";
+import {
+  AlertTriangle,
+  Check,
+  Copy,
+  OctagonAlert,
+  ShieldAlert,
+  ShieldCheck,
+} from "@/components/icons";
 
 export default function ReviewPage() {
   const [intakeText, setIntakeText] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // The editable record returned by /process. Held in state so the human can
-  // correct any field before approving (requirement #5).
+  // The editable record from /process. Held in state so the reviewer can correct
+  // any field before approving.
   const [record, setRecord] = useState<CRMRecord | null>(null);
 
-  // The approval gate. `saveResult` is set only after the backend has written
-  // the record to the CRM — nothing is persisted until then.
+  // The approval gate. `saveResult` is set only after the backend has written to
+  // the CRM — nothing is persisted before that.
   const [approving, setApproving] = useState(false);
   const [saveResult, setSaveResult] = useState<SaveResult | null>(null);
   const [approveError, setApproveError] = useState<string | null>(null);
@@ -46,16 +55,12 @@ export default function ReviewPage() {
     }
   }
 
-  // Generic field updater keeps every input controlled + editable.
   function update<K extends keyof CRMRecord>(key: K, value: CRMRecord[K]) {
     setRecord((r) => (r ? { ...r, [key]: value } : r));
   }
 
   async function handleApprove() {
     if (!record) return;
-    // The approval gate: send the (edited) record to the backend, which flips
-    // status to "approved" and writes it to the CRM. Only on success do we show
-    // the approved state — nothing is persisted client-side.
     setApproving(true);
     setApproveError(null);
     try {
@@ -63,9 +68,7 @@ export default function ReviewPage() {
       setRecord(saved);
       setSaveResult(storage);
     } catch (e) {
-      setApproveError(
-        e instanceof Error ? e.message : "Could not save the record.",
-      );
+      setApproveError(e instanceof Error ? e.message : "Could not save the record.");
     } finally {
       setApproving(false);
     }
@@ -81,37 +84,30 @@ export default function ReviewPage() {
   const lowConfidence = record?.matter_type_confidence === "low";
 
   return (
-    <main className="min-h-screen">
-      {/* Disclaimer banner — the three promises stated up front. */}
-      <div className="bg-slate-900 text-slate-100 text-xs sm:text-sm px-4 py-2 text-center">
-        Demo on <span className="font-semibold">synthetic data</span> · the tool{" "}
-        <span className="font-semibold">never gives legal advice</span> · replies
-        are drafted, <span className="font-semibold">never auto-sent</span>.
+    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+      <div className="mb-5">
+        <h1 className="font-display text-[26px] font-bold tracking-tight text-heading">
+          Intake review
+        </h1>
+        <p className="mt-1 text-sm text-ink-secondary">
+          Paste a client inquiry, review what was extracted and screened, then approve.
+          Nothing is saved or sent until you do.
+        </p>
       </div>
 
-      <div className="mx-auto max-w-6xl px-4 py-6">
-        <header className="mb-6">
-          <h1 className="text-2xl font-semibold tracking-tight">
-            LegalFlow — Intake Review
-          </h1>
-          <p className="text-sm text-slate-500">
-            Paste a client inquiry (or load a sample), extract the structured
-            record, review &amp; edit, then approve.
-          </p>
-        </header>
-
-        <div className="grid gap-6 lg:grid-cols-2">
-          {/* ---------------- LEFT: raw intake input ---------------- */}
-          <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-              Raw intake
-            </h2>
-
-            <label className="mb-1 block text-sm font-medium text-slate-700">
-              Load a sample
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+        {/* ---------------- LEFT: raw intake ---------------- */}
+        <div className="lg:sticky lg:top-20 lg:self-start">
+          <Card title="Raw intake" subtitle="Paste an inquiry or load a synthetic sample">
+            <label
+              htmlFor="sample"
+              className="mb-1.5 block text-sm font-medium text-ink-secondary"
+            >
+              Sample intake
             </label>
             <select
-              className="mb-4 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+              id="sample"
+              className="mb-4 w-full cursor-pointer rounded-lg border border-line bg-surface px-3 py-2.5 text-sm text-ink-primary transition-colors duration-200 hover:border-line-strong"
               defaultValue=""
               onChange={(e) => {
                 const s = SAMPLES.find((x) => x.label === e.target.value);
@@ -119,7 +115,7 @@ export default function ReviewPage() {
               }}
             >
               <option value="" disabled>
-                Choose a synthetic sample…
+                Choose a sample…
               </option>
               {SAMPLES.map((s) => (
                 <option key={s.label} value={s.label}>
@@ -128,11 +124,15 @@ export default function ReviewPage() {
               ))}
             </select>
 
-            <label className="mb-1 block text-sm font-medium text-slate-700">
+            <label
+              htmlFor="intake"
+              className="mb-1.5 block text-sm font-medium text-ink-secondary"
+            >
               Intake text
             </label>
             <textarea
-              className="h-64 w-full resize-y rounded-lg border border-slate-300 px-3 py-2 text-sm leading-relaxed focus:border-slate-500 focus:outline-none"
+              id="intake"
+              className="h-56 w-full resize-y rounded-lg border border-line bg-surface px-3 py-2.5 text-sm leading-relaxed text-ink-primary transition-colors duration-200 placeholder:text-ink-muted hover:border-line-strong"
               placeholder="Paste the client's email or contact-form message here…"
               value={intakeText}
               onChange={(e) => setIntakeText(e.target.value)}
@@ -141,148 +141,129 @@ export default function ReviewPage() {
             <button
               onClick={handleProcess}
               disabled={loading || !intakeText.trim()}
-              className="mt-4 w-full rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
+              className="mt-4 inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand transition-colors duration-200 hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-40"
             >
-              {loading ? "Processing…" : "Process"}
+              {loading && (
+                <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-on-brand/30 border-t-on-brand" />
+              )}
+              {loading ? "Processing…" : "Process intake"}
             </button>
 
             {error && (
-              <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+              <p
+                role="alert"
+                className="mt-3 flex items-start gap-2 rounded-lg bg-crit-bg px-3 py-2 text-sm text-crit"
+              >
+                <AlertTriangle className="mt-0.5 h-4 w-4" />
                 {error}
               </p>
             )}
-          </section>
+          </Card>
+        </div>
 
-          {/* ---------------- RIGHT: extracted record ---------------- */}
-          <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-              Extracted record
-            </h2>
+        {/* ---------------- RIGHT: extracted record ---------------- */}
+        <div className="space-y-4">
+          {!record ? (
+            <Card title="Extracted record">
+              <EmptyState>
+                Process an intake to see the structured record, the conflict screen, and
+                the draft reply.
+              </EmptyState>
+            </Card>
+          ) : (
+            <>
+              <ConflictBanner conflict={record.conflict} />
 
-            {!record ? (
-              <p className="text-sm text-slate-400">
-                Process an intake to see the structured record and draft reply.
-              </p>
-            ) : (
-              <div className="space-y-4">
-                {/* Conflict screen result — first thing the reviewer sees,
-                    because it can make every other field moot. */}
-                <ConflictBanner conflict={record.conflict} />
-
+              <Card title="Extracted record" subtitle="Every field is editable before approval">
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  <TextField
-                    label="Client name"
-                    value={record.client_name}
-                    onChange={(v) => update("client_name", v)}
-                  />
-                  <TextField
-                    label="Email"
-                    value={record.client_email}
-                    onChange={(v) => update("client_email", v)}
-                  />
-                  <TextField
-                    label="Phone"
-                    value={record.client_phone}
-                    onChange={(v) => update("client_phone", v)}
-                  />
-                  <TextField
-                    label="Jurisdiction"
-                    value={record.jurisdiction}
-                    onChange={(v) => update("jurisdiction", v)}
-                  />
-                  <TextField
-                    label="Opposing party"
-                    value={record.opposing_party}
-                    onChange={(v) => update("opposing_party", v)}
-                  />
+                  <Field label="Client name" value={record.client_name} onChange={(v) => update("client_name", v)} />
+                  <Field label="Email" type="email" value={record.client_email} onChange={(v) => update("client_email", v)} />
+                  <Field label="Phone" type="tel" value={record.client_phone} onChange={(v) => update("client_phone", v)} />
+                  <Field label="Jurisdiction" value={record.jurisdiction} onChange={(v) => update("jurisdiction", v)} />
+                  <div className="sm:col-span-2">
+                    <Field
+                      label="Opposing party"
+                      value={record.opposing_party}
+                      onChange={(v) => update("opposing_party", v)}
+                      help="Drives the conflict screen"
+                    />
+                  </div>
                 </div>
 
-                {/* Matter type + confidence, with the low-confidence warning. */}
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">
+                <div className="mt-4">
+                  <label htmlFor="matter" className="mb-1.5 block text-sm font-medium text-ink-secondary">
                     Matter type
                   </label>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <select
-                      className="flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                      id="matter"
+                      className="min-w-0 flex-1 cursor-pointer rounded-lg border border-line bg-surface px-3 py-2.5 text-sm text-ink-primary transition-colors duration-200 hover:border-line-strong"
                       value={record.matter_type}
-                      onChange={(e) =>
-                        update("matter_type", e.target.value as MatterType)
-                      }
+                      onChange={(e) => update("matter_type", e.target.value as MatterType)}
                     >
                       {MATTER_TYPES.map((m) => (
-                        <option key={m} value={m}>
-                          {m}
-                        </option>
+                        <option key={m} value={m}>{m}</option>
                       ))}
                     </select>
                     <select
-                      className="rounded-lg border border-slate-300 bg-white px-2 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                      className="cursor-pointer rounded-lg border border-line bg-surface px-3 py-2.5 text-sm text-ink-secondary transition-colors duration-200 hover:border-line-strong"
                       value={record.matter_type_confidence}
                       onChange={(e) =>
-                        update(
-                          "matter_type_confidence",
-                          e.target.value as "high" | "low",
-                        )
+                        update("matter_type_confidence", e.target.value as "high" | "low")
                       }
-                      title="Model confidence in the classification"
+                      aria-label="Model confidence in the classification"
                     >
                       <option value="high">high confidence</option>
                       <option value="low">low confidence</option>
                     </select>
                   </div>
                   {lowConfidence && (
-                    <p className="mt-2 flex items-start gap-2 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
-                      <span aria-hidden>⚠️</span>
+                    <p className="mt-2 flex items-start gap-2 rounded-lg bg-warn-bg px-3 py-2 text-sm text-warn">
+                      <AlertTriangle className="mt-0.5 h-4 w-4" />
                       <span>
-                        Low-confidence classification — the model was unsure.
-                        Please verify the matter type before approving.
+                        The model was unsure of this classification. Verify the matter type
+                        before approving.
                       </span>
                     </p>
                   )}
                 </div>
 
-                {/* Key dates — editable, one per line. */}
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">
-                    Key dates{" "}
-                    <span className="font-normal text-slate-400">
-                      (one per line)
-                    </span>
-                  </label>
-                  <textarea
-                    className="h-16 w-full resize-y rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-                    value={record.key_dates.join("\n")}
-                    onChange={(e) =>
-                      update(
-                        "key_dates",
-                        e.target.value
-                          .split("\n")
-                          .map((s) => s.trim())
-                          .filter(Boolean),
-                      )
-                    }
-                  />
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="dates" className="mb-1.5 block text-sm font-medium text-ink-secondary">
+                      Key dates <span className="font-normal text-ink-muted">(one per line)</span>
+                    </label>
+                    <textarea
+                      id="dates"
+                      className="h-20 w-full resize-y rounded-lg border border-line bg-surface px-3 py-2.5 text-sm text-ink-primary transition-colors duration-200 hover:border-line-strong"
+                      value={record.key_dates.join("\n")}
+                      onChange={(e) =>
+                        update(
+                          "key_dates",
+                          e.target.value.split("\n").map((s) => s.trim()).filter(Boolean),
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="summary" className="mb-1.5 block text-sm font-medium text-ink-secondary">
+                      Summary
+                    </label>
+                    <textarea
+                      id="summary"
+                      className="h-20 w-full resize-y rounded-lg border border-line bg-surface px-3 py-2.5 text-sm text-ink-primary transition-colors duration-200 hover:border-line-strong"
+                      value={record.summary}
+                      onChange={(e) => update("summary", e.target.value)}
+                    />
+                  </div>
                 </div>
 
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">
-                    Summary
-                  </label>
-                  <textarea
-                    className="h-16 w-full resize-y rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-                    value={record.summary}
-                    onChange={(e) => update("summary", e.target.value)}
-                  />
-                </div>
-
-                {/* Missing fields — removable chips (edit before approving). */}
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">
+                <div className="mt-4">
+                  <span className="mb-1.5 block text-sm font-medium text-ink-secondary">
                     Missing fields
-                  </label>
+                  </span>
                   {record.missing_fields.length === 0 ? (
-                    <p className="text-sm text-slate-400">
+                    <p className="text-sm text-ink-muted">
                       None — all key details were provided.
                     </p>
                   ) : (
@@ -290,12 +271,12 @@ export default function ReviewPage() {
                       {record.missing_fields.map((f) => (
                         <span
                           key={f}
-                          className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-800"
+                          className="inline-flex items-center gap-1.5 rounded-full border border-warn/30 bg-warn-bg px-2.5 py-1 text-xs font-medium text-warn"
                         >
                           {f}
                           <button
-                            aria-label={`Remove ${f}`}
-                            className="text-amber-600 hover:text-amber-900"
+                            aria-label={`Remove ${f} from missing fields`}
+                            className="cursor-pointer rounded-full leading-none opacity-70 transition-opacity duration-150 hover:opacity-100"
                             onClick={() =>
                               update(
                                 "missing_fields",
@@ -310,169 +291,183 @@ export default function ReviewPage() {
                     </div>
                   )}
                 </div>
+              </Card>
 
-                {/* Draft reply — editable. */}
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">
-                    Draft reply{" "}
-                    <span className="font-normal text-slate-400">
-                      (logistics only — no legal advice)
-                    </span>
-                  </label>
-                  <textarea
-                    className="h-40 w-full resize-y rounded-lg border border-slate-300 px-3 py-2 text-sm leading-relaxed focus:border-slate-500 focus:outline-none"
-                    value={record.draft_reply}
-                    onChange={(e) => update("draft_reply", e.target.value)}
-                  />
-                </div>
+              <Card
+                title="Draft reply"
+                subtitle="Logistics only — the drafter is barred from giving legal advice"
+              >
+                <textarea
+                  aria-label="Draft reply"
+                  className="h-44 w-full resize-y rounded-lg border border-line bg-surface px-3 py-2.5 text-sm leading-relaxed text-ink-primary transition-colors duration-200 hover:border-line-strong"
+                  value={record.draft_reply}
+                  onChange={(e) => update("draft_reply", e.target.value)}
+                />
 
-                {/* Approval gate. */}
                 {approved && saveResult ? (
-                  <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4">
-                    <p className="text-sm font-semibold text-emerald-800">
-                      ✓ {saveResult.already_saved ? "Already saved" : "Approved & saved"}
+                  <div className="mt-4 rounded-lg border border-good/30 bg-good-bg p-4">
+                    <p className="flex items-center gap-2 text-sm font-semibold text-good">
+                      <ShieldCheck />
+                      {saveResult.already_saved ? "Already saved" : "Approved & saved"}
                     </p>
-                    <p className="mt-1 text-sm text-emerald-700">
-                      Record{" "}
-                      <span className="font-mono">{record.intake_id}</span> was
-                      written to the{" "}
-                      <span className="font-semibold">{saveResult.backend}</span>{" "}
-                      CRM.
-                    </p>
-                    <p className="mt-1 break-all text-xs text-emerald-600">
-                      {saveResult.backend === "airtable"
-                        ? `Airtable ${saveResult.location}` +
-                          (saveResult.external_ref
-                            ? ` · ${saveResult.external_ref}`
-                            : "")
-                        : saveResult.location}
+                    <p className="mt-1 text-sm text-ink-secondary">
+                      <span className="tnum">{record.intake_id}</span> written to the{" "}
+                      <span className="font-medium">{saveResult.backend}</span> CRM.
                     </p>
                     <button
                       onClick={copyReply}
-                      className="mt-3 rounded-lg border border-emerald-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-800 transition hover:bg-emerald-100"
+                      className="mt-3 inline-flex cursor-pointer items-center gap-2 rounded-lg border border-line bg-surface px-4 py-2 text-sm font-semibold text-ink-primary transition-colors duration-200 hover:bg-surface-2"
                     >
-                      {copied ? "Copied!" : "Copy reply"}
+                      {copied ? <Check /> : <Copy />}
+                      {copied ? "Copied" : "Copy reply"}
                     </button>
-                    {/* Deliberately NO send button — replies are never auto-sent. */}
+                    {/* No send button by design — replies are never auto-sent. */}
                   </div>
                 ) : (
-                  <div>
+                  <div className="mt-4">
                     <button
                       onClick={handleApprove}
                       disabled={approving}
-                      className="w-full rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-40"
+                      className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand transition-colors duration-200 hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-40"
                     >
-                      {approving ? "Saving…" : "Approve & Save"}
+                      {approving && (
+                        <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-on-brand/30 border-t-on-brand" />
+                      )}
+                      {approving ? "Saving…" : "Approve & save to CRM"}
                     </button>
                     {approveError && (
-                      <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+                      <p
+                        role="alert"
+                        className="mt-3 flex items-start gap-2 rounded-lg bg-crit-bg px-3 py-2 text-sm text-crit"
+                      >
+                        <AlertTriangle className="mt-0.5 h-4 w-4" />
                         {approveError}
                       </p>
                     )}
                   </div>
                 )}
-              </div>
-            )}
-          </section>
+              </Card>
+            </>
+          )}
         </div>
       </div>
-    </main>
+    </div>
   );
 }
 
-// The conflict screen result. Deliberately the loudest element on the page: a
-// CONFLICT means the firm may be barred from taking this client at all, so it
-// outranks every other field. Shows the matched matters and the reason, since a
-// verdict a lawyer can't inspect is a verdict they can't overrule.
+/*
+  The conflict screen result. Deliberately the loudest element on the page: a
+  conflict can bar the firm from taking the client at all, so it outranks every
+  other field. The matched matters are listed because a verdict a lawyer can't
+  inspect is a verdict they can't overrule.
+*/
 function ConflictBanner({ conflict }: { conflict: ConflictResult | null }) {
   if (!conflict) return null;
 
   const style = {
     CONFLICT: {
-      box: "border-red-300 bg-red-50",
-      title: "text-red-900",
-      body: "text-red-800",
-      label: "⛔ Conflict of interest — do not accept without review",
+      wrap: "border-crit/40 bg-crit-bg",
+      text: "text-crit",
+      Icon: OctagonAlert,
+      label: "Conflict of interest — do not accept without review",
     },
     POTENTIAL: {
-      box: "border-amber-300 bg-amber-50",
-      title: "text-amber-900",
-      body: "text-amber-800",
-      label: "⚠️ Potential conflict — needs a human decision",
+      wrap: "border-warn/40 bg-warn-bg",
+      text: "text-warn",
+      Icon: ShieldAlert,
+      label: "Potential conflict — needs a human decision",
     },
     CLEAR: {
-      box: "border-emerald-200 bg-emerald-50",
-      title: "text-emerald-900",
-      body: "text-emerald-800",
-      label: "✓ No conflict found",
+      wrap: "border-good/30 bg-good-bg",
+      text: "text-good",
+      Icon: ShieldCheck,
+      label: "No conflict found",
     },
   }[conflict.status];
 
+  const { Icon } = style;
+
   return (
-    <div className={`rounded-lg border p-4 ${style.box}`}>
-      <p className={`text-sm font-semibold ${style.title}`}>{style.label}</p>
-      <p className={`mt-1 text-xs ${style.body}`}>
-        Screened against {conflict.checked_against} past matters.
-      </p>
+    <section className={`rounded-xl border p-4 ${style.wrap}`} aria-live="polite">
+      <div className="flex items-start gap-2.5">
+        <Icon className={`mt-0.5 h-4 w-4 ${style.text}`} />
+        <div className="min-w-0 flex-1">
+          <p className={`text-sm font-semibold ${style.text}`}>{style.label}</p>
+          <p className="mt-0.5 text-xs text-ink-secondary">
+            Screened against{" "}
+            <span className="tnum">{conflict.checked_against}</span> past matters
+          </p>
 
-      {conflict.matches.length > 0 && (
-        <ul className={`mt-2 space-y-1 text-sm ${style.body}`}>
-          {conflict.matches.map((m) => (
-            <li key={`${m.matter_id}-${m.kind}`} className="flex gap-2">
-              <span className="font-mono text-xs opacity-70">
-                {m.score.toFixed(2)}
-              </span>
-              <span>{m.reason}</span>
-            </li>
+          {conflict.matches.length > 0 && (
+            <ul className="mt-2.5 space-y-1.5">
+              {conflict.matches.map((m) => (
+                <li
+                  key={`${m.matter_id}-${m.kind}`}
+                  className="flex gap-2 text-sm text-ink-primary"
+                >
+                  {/* self-start: without it this stretches to the full height
+                      of a wrapped reason line and reads as a tall empty box. */}
+                  <span className="tnum mt-0.5 shrink-0 self-start rounded bg-surface px-1.5 py-0.5 text-xs text-ink-secondary">
+                    {m.score.toFixed(2)}
+                  </span>
+                  <span className="leading-relaxed">{m.reason}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {conflict.returning_client_matters.length > 0 && (
+            <p className="mt-2 text-sm text-ink-secondary">
+              Returning client — previously acted for them in{" "}
+              <span className="tnum">{conflict.returning_client_matters.join(", ")}</span>. Not
+              a conflict.
+            </p>
+          )}
+
+          {/* A CLEAR result that could only see one side is not really clear. */}
+          {conflict.limitations.map((l) => (
+            <p
+              key={l}
+              className="mt-2 rounded-lg border border-line bg-surface px-2.5 py-1.5 text-xs leading-relaxed text-ink-secondary"
+            >
+              <span className="font-semibold text-ink-primary">Limitation: </span>
+              {l}
+            </p>
           ))}
-        </ul>
-      )}
-
-      {conflict.returning_client_matters.length > 0 && (
-        <p className={`mt-2 text-sm ${style.body}`}>
-          Returning client — previously acted for them in{" "}
-          <span className="font-mono text-xs">
-            {conflict.returning_client_matters.join(", ")}
-          </span>
-          . Not a conflict.
-        </p>
-      )}
-
-      {/* A CLEAR result that could only screen one side is not really clear. */}
-      {conflict.limitations.map((l) => (
-        <p
-          key={l}
-          className="mt-2 rounded border border-slate-300 bg-white/60 px-2 py-1 text-xs text-slate-700"
-        >
-          Limitation: {l}
-        </p>
-      ))}
-    </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
-// Small controlled text input that treats "" as null so cleared fields map back
-// to the record's nullable shape.
-function TextField({
+function Field({
   label,
   value,
   onChange,
+  type = "text",
+  help,
 }: {
   label: string;
   value: string | null;
   onChange: (v: string | null) => void;
+  type?: string;
+  help?: string;
 }) {
+  const id = label.toLowerCase().replace(/\s+/g, "-");
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium text-slate-700">
+      <label htmlFor={id} className="mb-1.5 block text-sm font-medium text-ink-secondary">
         {label}
       </label>
       <input
-        className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+        id={id}
+        type={type}
+        className="w-full rounded-lg border border-line bg-surface px-3 py-2.5 text-sm text-ink-primary transition-colors duration-200 placeholder:text-ink-muted hover:border-line-strong"
         value={value ?? ""}
-        placeholder="—"
+        placeholder="Not provided"
         onChange={(e) => onChange(e.target.value === "" ? null : e.target.value)}
       />
+      {help && <p className="mt-1 text-xs text-ink-muted">{help}</p>}
     </div>
   );
 }

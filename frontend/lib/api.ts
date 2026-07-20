@@ -1,4 +1,4 @@
-import type { ApproveResponse, CRMRecord, ProcessResponse } from "./types";
+import type { ApproveResponse, CRMRecord, ProcessResponse, Stats } from "./types";
 
 // The FastAPI backend. Override via NEXT_PUBLIC_API_BASE_URL in .env.local if you
 // run uvicorn on a non-default port (e.g. http://localhost:8010).
@@ -36,4 +36,11 @@ export function processIntake(text: string): Promise<ProcessResponse> {
 // is called.
 export function approveIntake(record: CRMRecord): Promise<ApproveResponse> {
   return postJSON<ApproveResponse>("/approve", record);
+}
+
+// Dashboard aggregates, computed from approved records only.
+export async function fetchStats(): Promise<Stats> {
+  const res = await fetch(`${API_BASE}/stats`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Could not load stats (${res.status})`);
+  return res.json();
 }

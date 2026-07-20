@@ -23,6 +23,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .conflicts import check_conflicts
 from .llm import LLMError, process_intake
 from .schema import ApproveResponse, CRMRecord, ProcessRequest, ProcessResponse
+from .stats import compute_stats
 from .storage import StorageError, save_record
 
 app = FastAPI(title="LegalFlow API", version="0.1.0")
@@ -42,6 +43,12 @@ app.add_middleware(
 @app.get("/health")
 def health() -> dict:
     return {"status": "ok"}
+
+
+@app.get("/stats")
+def stats() -> dict:
+    """Dashboard aggregates, derived only from records a human actually approved."""
+    return compute_stats()
 
 
 @app.post("/process", response_model=ProcessResponse)

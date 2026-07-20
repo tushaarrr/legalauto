@@ -72,3 +72,25 @@ export interface ApproveResponse {
   record: CRMRecord;
   storage: SaveResult;
 }
+
+// Mirror of the backend's compute_stats() (backend/app/stats.py).
+export interface Stats {
+  empty: boolean;
+  total_intakes: number;
+  history_size: number;
+  conflict: Record<"CLEAR" | "POTENTIAL" | "CONFLICT" | "NOT_CHECKED", number>;
+  conflict_rate_pct: number;
+  matter_types: { name: string; count: number }[];
+  missing_fields: { field: string; count: number }[];
+  confidence: { high: number; low: number };
+  low_confidence_pct?: number;
+  incomplete_screens: number;
+  recent: {
+    intake_id: string;
+    client_name: string;
+    matter_type: string;
+    conflict_status: ConflictStatus | "NOT_CHECKED";
+    approved_at: string;
+    missing_count: number;
+  }[];
+}

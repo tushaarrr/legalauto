@@ -2,10 +2,201 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+  Design tokens. Every colour in the app is a semantic role, never a raw hex in a
+  component, so light/dark swap in exactly one place.
+
+  Palette derived from the Clio product UI: vivid blue app bar, deep navy
+  navigation rail, near-white canvas, coral as the chart secondary.
+
+  Chart mark colours were run through the dataviz palette validator against the
+  real card surface rather than eyeballed:
+    --chart-bar / --chart-bar-2  blue + coral. As a pair: CVD dE 29.0,
+      normal-vision dE 38.5 — comfortably clear of the floors, and both >=3:1
+      on white.
+    --good / --warn / --crit  status roles for the conflict screen. These form a
+      green/amber/red trio, exactly the pairing colour-blind readers struggle
+      with (protan dE 5.4), so every use ships an icon AND a text label —
+      colour never carries the meaning on its own.
+*/
 :root {
   color-scheme: light;
+
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --surface-2: #f2f5f9;
+  --surface-3: #e8eef7;
+  --border: #e3e8ef;
+  --border-strong: #cdd5e0;
+
+  --text-primary: #16213e;
+  --text-secondary: #5a6b87;
+  --text-muted: #7c8aa3;
+  --heading: #16213e;
+
+  /* Vivid product blue for the app bar, primary buttons and active states. */
+  --primary: #1668f5;
+  --primary-hover: #0d55d4;
+  --on-primary: #ffffff;
+  --accent: #e8503a;
+
+  /* App bar surface. Light mirrors the product's vivid blue bar; dark uses a
+     deep navy instead, because a bright blue band reads as a glare strip
+     against dark content. */
+  --appbar: #1668f5;
+
+  /* Deep navy rail — the fixed left navigation column. */
+  --rail: #16244a;
+  --rail-2: #1e3057;
+  --rail-ink: #aab8d4;
+  --rail-ink-active: #ffffff;
+
+  --good: #0ca30c;
+  --warn: #d97706; /* amber stepped for >=3:1 on white; #fab219 fails at 1.83 */
+  --crit: #d03b3b;
+  --good-bg: #f0fdf4;
+  --warn-bg: #fffbeb;
+  --crit-bg: #fef2f2;
+
+  --chart-bar: #1668f5;
+  --chart-bar-2: #e8503a;
+  --chart-track: #eef2f7;
+  --grid: #e3e8ef;
+
+  --ring: #1668f5;
+  --shadow-sm: 0 1px 2px 0 rgb(22 33 62 / 0.05), 0 1px 3px 0 rgb(22 33 62 / 0.06);
+  --shadow-md: 0 2px 4px -1px rgb(22 33 62 / 0.07), 0 4px 12px -2px rgb(22 33 62 / 0.09);
+}
+
+/* Dark steps are selected for the dark surface, not an inversion of light. */
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+
+    --bg: #0b1220;
+    --surface: #131c2f;
+    --surface-2: #1b2740;
+    --surface-3: #24324f;
+    --border: #22304c;
+    --border-strong: #33425f;
+
+    --text-primary: #eef2f8;
+    --text-secondary: #9fb0cc;
+    --text-muted: #7f8ea9;
+    --heading: #ffffff;
+
+    --primary: #4d8ffb;
+    --primary-hover: #74a7fc;
+    --on-primary: #06152f;
+    --accent: #f4735e;
+
+    --appbar: #101b31;
+    --rail: #0e1729;
+    --rail-2: #1b2740;
+    --rail-ink: #93a4c4;
+    --rail-ink-active: #ffffff;
+
+    --good: #0ca30c;
+    --warn: #fab219;
+    --crit: #e05c5c;
+    --good-bg: #06280f;
+    --warn-bg: #2d2205;
+    --crit-bg: #2f1111;
+
+    --chart-bar: #4d8ffb;
+    --chart-bar-2: #f4735e;
+    --chart-track: #1b2740;
+    --grid: #22304c;
+
+    --ring: #74a7fc;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.45);
+    --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.55);
+  }
+}
+
+/* The explicit toggle must win over the OS setting in both directions. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #0b1220;
+  --surface: #131c2f;
+  --surface-2: #1b2740;
+  --surface-3: #24324f;
+  --border: #22304c;
+  --border-strong: #33425f;
+
+  --text-primary: #eef2f8;
+  --text-secondary: #9fb0cc;
+  --text-muted: #7f8ea9;
+  --heading: #ffffff;
+
+  --primary: #4d8ffb;
+  --primary-hover: #74a7fc;
+  --on-primary: #06152f;
+  --accent: #f4735e;
+
+  --appbar: #101b31;
+  --rail: #0e1729;
+  --rail-2: #1b2740;
+  --rail-ink: #93a4c4;
+  --rail-ink-active: #ffffff;
+
+  --good: #0ca30c;
+  --warn: #fab219;
+  --crit: #e05c5c;
+  --good-bg: #06280f;
+  --warn-bg: #2d2205;
+  --crit-bg: #2f1111;
+
+  --chart-bar: #4d8ffb;
+  --chart-bar-2: #f4735e;
+  --chart-track: #1b2740;
+  --grid: #22304c;
+
+  --ring: #74a7fc;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.45);
+  --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.55);
 }
 
 body {
-  @apply bg-slate-50 text-slate-900 antialiased;
+  background-color: var(--bg);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Tabular figures wherever numbers are compared, so columns don't jitter. */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* One visible focus treatment for every interactive element. */
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Bars grow from zero on first paint; suppressed under reduced-motion above. */
+@keyframes growBar {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.bar-grow {
+  transform-origin: left center;
+  animation: growBar 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
