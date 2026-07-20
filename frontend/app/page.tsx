@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { alertIn, crossFade, pressable, stagger } from "@/components/motion";
 import { approveIntake, processIntake } from "@/lib/api";
 import { SAMPLES } from "@/lib/samples";
 import {
@@ -97,7 +99,12 @@ export default function ReviewPage() {
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
         {/* ---------------- LEFT: raw intake ---------------- */}
-        <div className="lg:sticky lg:top-20 lg:self-start">
+        <motion.div
+          variants={stagger}
+          initial="hidden"
+          animate="show"
+          className="lg:sticky lg:top-20 lg:self-start"
+        >
           <Card title="Raw intake" subtitle="Paste an inquiry or load a synthetic sample">
             <label
               htmlFor="sample"
@@ -138,7 +145,8 @@ export default function ReviewPage() {
               onChange={(e) => setIntakeText(e.target.value)}
             />
 
-            <button
+            <motion.button
+              {...pressable}
               onClick={handleProcess}
               disabled={loading || !intakeText.trim()}
               className="mt-4 inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand transition-colors duration-200 hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-40"
@@ -147,7 +155,7 @@ export default function ReviewPage() {
                 <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-on-brand/30 border-t-on-brand" />
               )}
               {loading ? "Processing…" : "Process intake"}
-            </button>
+            </motion.button>
 
             {error && (
               <p
@@ -159,10 +167,16 @@ export default function ReviewPage() {
               </p>
             )}
           </Card>
-        </div>
+        </motion.div>
 
         {/* ---------------- RIGHT: extracted record ---------------- */}
-        <div className="space-y-4">
+        <motion.div
+          variants={stagger}
+          initial="hidden"
+          animate="show"
+          key={record?.intake_id ?? "empty"}
+          className="space-y-4"
+        >
           {!record ? (
             <Card title="Extracted record">
               <EmptyState>
@@ -304,8 +318,16 @@ export default function ReviewPage() {
                   onChange={(e) => update("draft_reply", e.target.value)}
                 />
 
+                <AnimatePresence mode="wait" initial={false}>
                 {approved && saveResult ? (
-                  <div className="mt-4 rounded-lg border border-good/30 bg-good-bg p-4">
+                  <motion.div
+                    key="saved"
+                    variants={crossFade}
+                    initial="hidden"
+                    animate="show"
+                    exit="exit"
+                    className="mt-4 rounded-lg border border-good/30 bg-good-bg p-4"
+                  >
                     <p className="flex items-center gap-2 text-sm font-semibold text-good">
                       <ShieldCheck />
                       {saveResult.already_saved ? "Already saved" : "Approved & saved"}
@@ -314,18 +336,27 @@ export default function ReviewPage() {
                       <span className="tnum">{record.intake_id}</span> written to the{" "}
                       <span className="font-medium">{saveResult.backend}</span> CRM.
                     </p>
-                    <button
+                    <motion.button
+                      {...pressable}
                       onClick={copyReply}
                       className="mt-3 inline-flex cursor-pointer items-center gap-2 rounded-lg border border-line bg-surface px-4 py-2 text-sm font-semibold text-ink-primary transition-colors duration-200 hover:bg-surface-2"
                     >
                       {copied ? <Check /> : <Copy />}
                       {copied ? "Copied" : "Copy reply"}
-                    </button>
+                    </motion.button>
                     {/* No send button by design — replies are never auto-sent. */}
-                  </div>
+                  </motion.div>
                 ) : (
-                  <div className="mt-4">
-                    <button
+                  <motion.div
+                    key="approve"
+                    variants={crossFade}
+                    initial="hidden"
+                    animate="show"
+                    exit="exit"
+                    className="mt-4"
+                  >
+                    <motion.button
+                      {...pressable}
                       onClick={handleApprove}
                       disabled={approving}
                       className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand transition-colors duration-200 hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-40"
@@ -334,7 +365,7 @@ export default function ReviewPage() {
                         <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-on-brand/30 border-t-on-brand" />
                       )}
                       {approving ? "Saving…" : "Approve & save to CRM"}
-                    </button>
+                    </motion.button>
                     {approveError && (
                       <p
                         role="alert"
@@ -344,12 +375,13 @@ export default function ReviewPage() {
                         {approveError}
                       </p>
                     )}
-                  </div>
+                  </motion.div>
                 )}
+                </AnimatePresence>
               </Card>
             </>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
@@ -388,7 +420,13 @@ function ConflictBanner({ conflict }: { conflict: ConflictResult | null }) {
   const { Icon } = style;
 
   return (
-    <section className={`rounded-xl border p-4 ${style.wrap}`} aria-live="polite">
+    <motion.section
+      variants={alertIn}
+      initial="hidden"
+      animate="show"
+      className={`rounded-xl border p-4 ${style.wrap}`}
+      aria-live="polite"
+    >
       <div className="flex items-start gap-2.5">
         <Icon className={`mt-0.5 h-4 w-4 ${style.text}`} />
         <div className="min-w-0 flex-1">
@@ -436,7 +474,7 @@ function ConflictBanner({ conflict }: { conflict: ConflictResult | null }) {
           ))}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, FileSearch, Scale, Search } from "./icons";
@@ -65,13 +66,22 @@ export function SideRail() {
               aria-current={active ? "page" : undefined}
               title={label}
               // Active state is a filled tile + white ink, not colour alone.
-              className={`flex h-11 w-11 flex-col items-center justify-center rounded-lg transition-colors duration-200 ${
+              className={`relative flex h-11 w-11 flex-col items-center justify-center rounded-lg transition-colors duration-200 ${
                 active
-                  ? "bg-brand text-rail-ink-active"
+                  ? "text-rail-ink-active"
                   : "text-rail-ink hover:bg-rail-2 hover:text-rail-ink-active"
               }`}
             >
-              <Icon className="h-5 w-5" />
+              {/* One element shared across items, so the highlight slides
+                  between them instead of blinking out and in. */}
+              {active && (
+                <motion.span
+                  layoutId="rail-active"
+                  className="absolute inset-0 rounded-lg bg-brand"
+                  transition={{ type: "spring", stiffness: 450, damping: 35 }}
+                />
+              )}
+              <Icon className="relative h-5 w-5" />
               <span className="sr-only">{label}</span>
             </Link>
           );
@@ -103,14 +113,19 @@ export function MobileNav() {
               key={href}
               href={href}
               aria-current={active ? "page" : undefined}
-              className={`inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ${
-                active
-                  ? "bg-surface-3 font-semibold text-brand"
-                  : "font-medium text-ink-secondary"
+              className={`relative inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ${
+                active ? "font-semibold text-brand" : "font-medium text-ink-secondary"
               }`}
             >
-              <Icon />
-              {label}
+              {active && (
+                <motion.span
+                  layoutId="mobile-active"
+                  className="absolute inset-0 rounded-lg bg-surface-3"
+                  transition={{ type: "spring", stiffness: 450, damping: 35 }}
+                />
+              )}
+              <Icon className="relative h-4 w-4" />
+              <span className="relative">{label}</span>
             </Link>
           );
         })}

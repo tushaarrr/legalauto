@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { riseIn, stagger } from "@/components/motion";
 import { fetchStats } from "@/lib/api";
 import type { Stats } from "@/lib/types";
 import {
@@ -116,7 +118,12 @@ export default function DashboardPage() {
   return (
     <Shell>
       {/* KPI row — the four numbers a firm would actually act on. */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <motion.div
+        variants={stagger}
+        initial="hidden"
+        animate="show"
+        className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+      >
         <StatTile
           label="Intakes processed"
           value={stats.total_intakes}
@@ -126,6 +133,7 @@ export default function DashboardPage() {
         <StatTile
           label="Conflict exposure"
           value={stats.conflict_rate_pct}
+          decimals={1}
           unit="%"
           tone={flagged > 0 ? "warn" : "good"}
           hint={`${flagged} of ${stats.total_intakes} matched a party in ${stats.history_size} past matters`}
@@ -141,18 +149,24 @@ export default function DashboardPage() {
         <StatTile
           label="Needed a second look"
           value={stats.low_confidence_pct ?? 0}
+          decimals={1}
           unit="%"
           hint={`${stats.confidence.low} classified with low confidence`}
           icon={<Sparkles className="h-3.5 w-3.5" />}
         />
-      </div>
+      </motion.div>
 
       {/*
         The insight, stated in words. A dashboard that only draws bars makes the
         reader derive the finding; this names it and says what to do about it.
       */}
       {topMissing && (
-        <div className="mt-4 flex items-start gap-3 rounded-xl border border-accent/30 bg-warn-bg p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.32, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-4 flex items-start gap-3 rounded-xl border border-accent/30 bg-warn-bg p-4"
+        >
           <Sparkles className="mt-0.5 h-4 w-4 text-accent" />
           <p className="text-sm leading-relaxed text-ink-primary">
             <span className="font-semibold">What to fix first: </span>
@@ -167,10 +181,15 @@ export default function DashboardPage() {
             )}
             . Adding it to your intake form removes that gap at the source.
           </p>
-        </div>
+        </motion.div>
       )}
 
-      <div className="mt-4 grid gap-4 lg:grid-cols-2">
+      <motion.div
+        variants={stagger}
+        initial="hidden"
+        animate="show"
+        className="mt-4 grid gap-4 lg:grid-cols-2"
+      >
         <Card
           title="Conflict screen outcomes"
           subtitle={`Every intake checked against ${stats.history_size} past matters`}
@@ -230,7 +249,7 @@ export default function DashboardPage() {
             </div>
           )}
         </Card>
-      </div>
+      </motion.div>
     </Shell>
   );
 }

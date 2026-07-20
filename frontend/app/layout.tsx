@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AppBar, MobileNav, SideRail } from "@/components/Nav";
+import { MotionProvider } from "@/components/motion";
 
 /*
   One grotesque for the whole product, mirroring the UI this theme copies:
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="font-sans">
+        <MotionProvider>
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-brand focus:px-4 focus:py-2 focus:text-on-brand"
@@ -53,6 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main" className="sm:pl-16">
           {children}
         </main>
+        </MotionProvider>
       </body>
     </html>
   );
