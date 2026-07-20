@@ -27,6 +27,7 @@ from urllib.parse import urlparse
 
 import httpx
 
+from .. import config  # noqa: F401  — imported for its side effect: loads .env
 from ..schema import SourceResult
 
 BACKEND_ROOT = Path(__file__).resolve().parents[2]

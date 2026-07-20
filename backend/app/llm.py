@@ -16,15 +16,10 @@ from __future__ import annotations
 
 import json
 import os
-from pathlib import Path
 
-from dotenv import load_dotenv
 from openai import OpenAI
 
-# Load backend/.env regardless of the process's working directory so the API key
-# and optional LLM_MODEL are available whether launched via uvicorn or a script.
-load_dotenv(Path(__file__).resolve().parents[1] / ".env")
-
+from . import config  # noqa: F401  — imported for its side effect: loads .env
 from .conflicts import is_generic_party_reference
 from .prompts import (
     DRAFT_SYSTEM_PROMPT,
