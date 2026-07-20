@@ -15,9 +15,9 @@ import time
 
 import httpx
 
-from app.clients import courtlistener, firecrawl, opencorporates
+from app.clients import courtlistener, firecrawl, gleif
 from app.clients.base import DEFAULT_TIMEOUT
-from app.clients.opencorporates import looks_like_company
+from app.clients.gleif import looks_like_company
 
 
 def show(label: str, r) -> None:
@@ -37,7 +37,7 @@ def show(label: str, r) -> None:
 async def main() -> None:
     async with httpx.AsyncClient(timeout=DEFAULT_TIMEOUT, follow_redirects=True) as client:
         print("=" * 72)
-        print("1. COMPANY HEURISTIC (gates the OpenCorporates call)")
+        print("1. COMPANY HEURISTIC (gates the GLEIF entity lookup)")
         print("=" * 72)
         for name in ["Pacific Holdings Ltd", "Kestrel Properties LLC", "Acme Industries",
                      "Kate Hall", "Nadia Bergstrom", "Wendell Farthing"]:
@@ -60,12 +60,13 @@ async def main() -> None:
         show("individual party (CourtListener still applies)", r3)
 
         print("=" * 72)
-        print("3. OPENCORPORATES — conditional skip vs missing credential")
+        print("3. GLEIF — live entity verification (no key), conditional skip")
         print("=" * 72)
-        show("individual -> must SKIP (not applicable)",
-             await opencorporates.fetch(client, "Kate Hall"))
-        show("company -> attempted; no API key configured",
-             await opencorporates.fetch(client, "Pacific Holdings Ltd"))
+        show("individual -> must SKIP (registry lookup not applicable)",
+             await gleif.fetch(client, "Kate Hall"))
+        show("company, exact legal-name match", await gleif.fetch(client, "Pacific Holdings Ltd"))
+        show("company, misspelled -> falls back to GLEIF fuzzy index",
+             await gleif.fetch(client, "Kestrel Properties LLC"))
 
         print("=" * 72)
         print("4. FIRECRAWL — gates: key, target, robots.txt")
