@@ -92,8 +92,17 @@ def approve(record: CRMRecord) -> ApproveResponse:
     reviewer made (requirement #5). We do NOT trust the incoming status — the
     server is the authority that flips it to "approved" — then hand it to the
     isolated storage layer. No LLM is involved; this step only persists.
+
+    The conflict verdict is re-screened here for the same reason the status is
+    re-forced: the reviewer is invited to correct client_name and opposing_party,
+    and the verdict that arrives was computed from the names BEFORE those edits.
+    Persisting it would file a CLEAR against names that now match a former
+    client. The screen is deterministic and local, so re-running it is free.
     """
-    approved = record.model_copy(update={"status": "approved"})
+    approved = record.model_copy(update={
+        "status": "approved",
+        "conflict": check_conflicts(record.client_name, record.opposing_party),
+    })
     try:
         result = save_record(approved)
     except StorageError as exc:

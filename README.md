@@ -66,7 +66,11 @@ persists nothing; `/approve` is the *only* path that writes to storage.
 1. **The approval gate.** The record returned by `/process` has
    `status: needs_review` and is never written anywhere. Persistence happens only
    when a human clicks Approve, which calls `/approve`; the server — not the
-   client — forces the status to `approved` before the write. See
+   client — forces the status to `approved` before the write. For the same
+   reason it also **re-runs the conflict screen** on the record it was handed:
+   the reviewer is invited to correct `client_name` and `opposing_party`, so the
+   verdict that arrives was computed from the names *before* those edits. The
+   client's verdict is never persisted. See
    [`backend/app/main.py`](backend/app/main.py) and the frontend handler in
    [`frontend/app/page.tsx`](frontend/app/page.tsx).
 
@@ -151,6 +155,48 @@ npm run dev                        # serves http://localhost:3000
 
 Open http://localhost:3000, load a synthetic sample (or paste your own), click
 **Process**, edit anything, then **Approve & Save**.
+
+## Tests
+
+```bash
+cd backend  && python -m scripts.test_approve_rescreen   # approval gate, no network
+cd frontend && npm run test:e2e                          # Playwright, browser to CSV
+```
+
+Both cover the same guarantee from different sides. The Python check calls
+`approve()` directly and asserts the server overrules a client-supplied conflict
+verdict. The browser suite drives a real browser: it edits the client name to a
+party the firm has opposed, clicks Approve, and asserts the banner flips to
+CONFLICT — a regression that only appears once a human edit travels through the
+UI, which no unit test can see.
+
+The browser suite is written in **Gherkin**
+([`frontend/features/`](frontend/features/)), because the promises it checks are
+the ones a firm has to trust, and they should be legible to the people who carry
+that risk rather than only to whoever can read a `.spec.ts`:
+
+```gherkin
+Scenario: The conflict screen is re-run on the reviewer's corrections
+  Given an intake has been processed and screened "No conflict found"
+  When the reviewer corrects the client name to a party the firm has opposed
+  Then the verdict on screen still reads "No conflict found"
+  When the reviewer approves the intake
+  Then the filed record reads "Conflict of interest — do not accept without review"
+```
+
+Cucumber here is a *surface*, not a second stack: `playwright-bdd` compiles the
+features into Playwright specs, so there is one runner, one browser lifecycle,
+and no assertion written twice. A run also emits `cucumber-report.html` — the
+scenarios as living documentation, openable without a terminal.
+
+`/process` is stubbed there (it is the only LLM call — real money, nondeterministic
+output); everything after the approval gate runs against the live backend, because
+that is what is under test. The suite starts its own backend on `:8001` pointed at
+a throwaway CSV, so it never files test rows into the CRM the dashboard reads.
+
+Neither needs an `OPENAI_API_KEY`. There is no unit-test framework in the repo on
+purpose: these two cover the paths where a failure is expensive, and a mirror of
+Pydantic's own validation would not.
 
 ### Storage / CRM configuration
 

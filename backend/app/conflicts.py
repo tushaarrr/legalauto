@@ -187,6 +187,16 @@ def check_conflicts(
     Returns CONFLICT / POTENTIAL / CLEAR plus the specific matters that triggered
     it, so the reviewing lawyer sees *why* rather than a bare verdict.
     """
+    # A role identifies nobody, so it cannot be screened. llm.py applies this to
+    # the model's output, but the reviewer can type "my employer" straight into
+    # the field — so the guard belongs here, where every caller routes through.
+    # Without it a role-shaped string reads as a screened party and suppresses
+    # the "only one side was checked" limitation below.
+    if is_generic_party_reference(opposing_party):
+        opposing_party = None
+    if is_generic_party_reference(client_name):
+        client_name = None
+
     history = load_history(history_path)
     matches: list[ConflictMatch] = []
     returning: list[str] = []
